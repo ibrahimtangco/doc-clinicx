@@ -18,8 +18,15 @@
 				<x-dropdown align="right" width="48">
 					<x-slot name="trigger">
 						<button
-							class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-							<div>{{ Auth::user()->first_name }}</div>
+							class="inline-flex gap-2 items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
+							<div class="flex flex-col items-end gap-1">
+                                <span>{{ Auth::user()->first_name }}
+                            @if (Auth::user()->middle_name)
+                                {{ ucfirst(substr(Auth::user()->middle_name, 0, 1)) }}.
+                            @endif
+                            {{ Auth::user()->last_name }}</span>
+                                <div>{{ Auth::user()->userType }}</div>
+                            </div>
 
 							<div class="ms-1">
 								<svg class="fill-current h-4 w-4" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
