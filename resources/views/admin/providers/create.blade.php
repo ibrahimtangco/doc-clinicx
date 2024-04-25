@@ -24,14 +24,14 @@
 						<form action="{{ route('providers.store') }}" class="mt-6 space-y-6" method="post" enctype="multipart/form-data">
 							@csrf
 
-                            <div>
+                            {{-- <div>
 								<x-input-label :value="__('Avatar')" for="avatar" />
                                 <div class="border border-gray-300 p-1 mt-1 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
                                     <x-text-input autocomplete="avatar" autofocus class="rounded-none block w-full shadow-none border-0" id="avatar" name="avatar"
 										type="file" />
                                 </div>
 								<x-input-error :messages="$errors->get('title')" class="mt-2" />
-							</div>
+							</div> --}}
 							<div>
 								<x-input-label :value="__('Title')" for="title" />
 								<select

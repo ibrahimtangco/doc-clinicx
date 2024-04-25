@@ -30,7 +30,7 @@
 							@csrf
 							@method('PUT')
 
-							<div>
+							{{-- <div>
 								<img alt="" class="w-12 h-12 rounded-full object-cover mb-4 border-2 border-gray-400"
 									src="{{ asset($provider->avatar) }}">
 								<x-input-label :value="__('Avatar')" for="avatar" />
@@ -39,7 +39,7 @@
 										id="avatar" name="avatar" type="file" />
 								</div>
 								<x-input-error :messages="$errors->get('title')" class="mt-2" />
-							</div>
+							</div> --}}
 							<div>
 								<x-input-label :value="__('Title')" for="title" />
 								<select
