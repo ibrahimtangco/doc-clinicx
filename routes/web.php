@@ -6,9 +6,9 @@ use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ProviderController;
+use App\Http\Controllers\SuperAdmin\SuperAdminController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Feedback\FeedbackController;
-use App\Http\Controllers\SuperAdmin\SuperAdminController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 /*
@@ -32,11 +32,6 @@ Route::middleware(['auth', 'verified', 'role:user'])->group(function () {
     Route::get('dashboard', [ServiceController::class, 'display'])->name('user.dashboard');
 });
 
-// Avatar Route
-Route::middleware(['auth', 'role:SuperAdmin'])->group(function () {
-    Route::get('profile/avatar', [AvatarController::class, 'edit'])->name('profile.avatar');
-    Route::patch('profile/avatar', [AvatarController::class, 'update'])->name('profile.avatar');
-});
 
 Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -55,8 +50,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     Route::get('admin/profile', [ProfileController::class, 'edit'])
         ->name('admin.profile.edit');
-
-    Route::patch('admin/profile', [AvatarController::class, 'update']);
 
     Route::resource('admin/providers', ProviderController::class);
     Route::resource('admin/services', ServiceController::class);
@@ -82,7 +75,7 @@ Route::middleware(['auth', 'role:user'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:SuperAdmin'])->group(function () {
-    Route::get('superadmin', [SuperAdminController::class, 'index'])->name('superadmin.index');
+    Route::get('superadmin', [SuperAdminController::class, 'index'])->name('superadmin.dashboard');
     Route::get('superadmin/profile', [ProfileController::class, 'edit'])->name('superadmin.profile.edit');
 });
 
