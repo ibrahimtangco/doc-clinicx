@@ -55,6 +55,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('admin/services', ServiceController::class);
 
     Route::resource('admin/patients', PatientController::class);
+    Route::post('admin/patients', [PatientController::class, 'search'])->name('patients.search');
 });
 
 

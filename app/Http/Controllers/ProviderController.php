@@ -106,7 +106,7 @@ class ProviderController extends Controller
             'specialization' => $request->specialization
         ]);
 
-        return redirect()->back()->with('message', 'Providers data has been updated.');
+        return redirect()->back()->with('message', 'Providers information has been updated.');
     }
 
     /**

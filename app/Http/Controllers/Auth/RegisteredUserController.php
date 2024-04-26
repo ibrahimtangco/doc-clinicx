@@ -38,11 +38,6 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Password::defaults()],
         ]);
 
-        // // Check if email verification is enabled and email has been verified
-        // if (config('auth.email_verification') && !$request->user()->hasVerifiedEmail()) {
-        //     return redirect()->back()->with('error', 'Please verify your email address.');
-        // } else {
-
         $user = User::create([
             'first_name' => $request->first_name,
             'middle_name' => $request->middle_name,

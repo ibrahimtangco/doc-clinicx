@@ -66,7 +66,7 @@
 		<h2 class="text-white-text/75 font-medium mb-2">OTHERS</h2>
 		<ul class="font-medium space-y-1">
 			<li class="cursor-pointer hover:bg-white/10 p-2 rounded-sm ease-in-out duration-200 {{ request()->routeIs('admin.patients') ? 'bg-white/10' : '' }}">
-				<a class="flex items-center gap-2" href="">
+				<a class="flex items-center gap-2" href="#">
 					<?xml version="1.0" ?><svg fill="currentColor" viewBox="0 0 640 512" width="20"
 						xmlns="http://www.w3.org/2000/svg">
 						<path
