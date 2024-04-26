@@ -96,6 +96,8 @@
 								<x-input-error :messages="$errors->get('address')" class="mt-2" />
 							</div>
 							<input name="userType" type="hidden" value="SuperAdmin">
+
+
 							<div class="mt-4">
 								<x-input-label :value="__('Email')" for="email" />
 								<x-text-input :value="old('email')" :value="$provider->user->email" autocomplete="username" class="block mt-1 w-full"

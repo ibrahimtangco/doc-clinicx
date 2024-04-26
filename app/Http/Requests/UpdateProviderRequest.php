@@ -39,12 +39,11 @@ class UpdateProviderRequest extends FormRequest
                 'lowercase',
                 'email',
                 'max:255',
-                Rule::unique('users', 'email')
-                    ->where(function ($query) {
-                        $userId = $this->route('provider')->user_id;
-                        $query->where('id', $userId);
-                    })
-                    ->ignore($this->route('provider')->id, 'id')
+                'email' => [
+                    'required',
+                    'email',
+                    Rule::unique('users')->ignore($this->route('provider')->id, 'id') // Ignore the current provider's email
+                ]
             ],
 
 

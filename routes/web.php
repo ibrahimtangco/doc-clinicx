@@ -54,7 +54,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('admin/providers', ProviderController::class);
     Route::resource('admin/services', ServiceController::class);
 
-    Route::get('patients', [PatientController::class, 'index'])->name('admin.patients');
+    Route::resource('admin/patients', PatientController::class);
 });
 
 

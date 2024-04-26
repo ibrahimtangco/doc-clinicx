@@ -19,20 +19,16 @@
 					<table class="w-full text-sm text-left rtl:text-right text-gray-500">
 						<thead class="text-xs text-gray-700 uppercase bg-gray-50">
 							<tr>
-								<th class="px-6 py-3" scope="col">Avatar</th>
 								<th class="px-6 py-3" scope="col">Name</th>
 								<th class="px-6 py-3" scope="col">Specialization</th>
 								<th class="px-6 py-3" scope="col">Email</th>
-								<th class="px-6 py-3" scope="col"><span class="sr-only">Edit</span></th>
+								<th class="px-6 py-3" scope="col"><span class="sr-only">Action</span></th>
 							</tr>
 						</thead>
 						<tbody>
 							@foreach ($providers as $provider)
 								<tr class="bg-white border-b hover:bg-gray-50">
-									<td class="px-6 py-4">
-										<img alt="" class="w-12 h-12 object-cover rounded-full"
-											src="{{ asset($provider->avatar) }}">
-									</td>
+
 									<td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap" scope="row">
 										<a href="{{ route('providers.show', ['provider' => $provider->id]) }}">
 											{{ $provider->title }}

@@ -1,6 +1,6 @@
 <div class="flex flex-col gap-2 px-6 mb-2">
 		<h2 class="font-medium text-white-text/75 mb-4">ACTIONS</h2>
-		<ul class="font-medium space-y-1" x-data="{ isOpenProvider: false, isOpenProcedure: false }"
+		<ul class="font-medium space-y-1" x-data="{ isOpenProvider: false, isOpenProcedure: false, isOpenPatient: false }"
 >
             <li
 				class="cursor-pointer hover:bg-white/10 p-2 rounded-sm ease-in-out duration-200 {{ request()->routeIs('admin.appointments') ? 'bg-white/10' : '' }}">
@@ -33,12 +33,12 @@
                 </svg>
                 </button>
                 <div x-show="isOpenProvider" class="pl-6 space-y-1">
-                    <a href="{{ route('providers.index') }}" class="flex w-full items-center gap-2 cursor-pointer hover:bg-white/10 p-2 rounded-sm ease-in-out duration-200">
+                    <a href="{{ route('providers.index') }}" class="flex w-full items-center gap-2 cursor-pointer hover:bg-white/10 p-2 rounded-sm ease-in-out duration-200 {{ request()->routeIs('providers.index') ? 'bg-white/10' : '' }}">
                     <?xml version="1.0" ?><svg class="bi bi-eye-fill" fill="currentColor" height="19px" viewBox="0 0 16 16" width="19px" xmlns="http://www.w3.org/2000/svg"><path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/><path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/></svg>
 
                         <span>View Providers</span>
                     </a>
-                    <a href="{{ route('providers.create') }}" class="flex w-full items-center gap-2 cursor-pointer hover:bg-white/10 p-2 rounded-sm ease-in-out duration-200">
+                    <a href="{{ route('providers.create') }}" class="flex w-full items-center gap-2 cursor-pointer hover:bg-white/10 p-2 rounded-sm ease-in-out duration-200 {{ request()->routeIs('providers.create') ? 'bg-white/10' : '' }}">
                     <svg height="19px" id="Layer_1" style="enable-background:new 0 0 512 512;" version="1.1" fill="currentColor" viewBox="0 0 512 512" width="19px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M417.4,224H288V94.6c0-16.9-14.3-30.6-32-30.6c-17.7,0-32,13.7-32,30.6V224H94.6C77.7,224,64,238.3,64,256  c0,17.7,13.7,32,30.6,32H224v129.4c0,16.9,14.3,30.6,32,30.6c17.7,0,32-13.7,32-30.6V288h129.4c16.9,0,30.6-14.3,30.6-32  C448,238.3,434.3,224,417.4,224z" /></svg>
                         <span>Add Provider</span>
                     </a>
@@ -67,11 +67,46 @@
                     <a href="{{ route('services.index') }}" class="flex w-full items-center gap-2 cursor-pointer hover:bg-white/10 p-2 rounded-sm ease-in-out duration-200">
                     <?xml version="1.0" ?><svg class="bi bi-eye-fill" fill="currentColor" height="19px" viewBox="0 0 16 16" width="19px" xmlns="http://www.w3.org/2000/svg"><path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/><path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/></svg>
 
-                        <span>View Procedure</span>
+                        <span>View Service</span>
                     </a>
                     <a href="{{ route('services.create') }}" class="flex w-full items-center gap-2 cursor-pointer hover:bg-white/10 p-2 rounded-sm ease-in-out duration-200">
                     <svg height="19px" id="Layer_1" style="enable-background:new 0 0 512 512;" version="1.1" fill="currentColor" viewBox="0 0 512 512" width="19px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M417.4,224H288V94.6c0-16.9-14.3-30.6-32-30.6c-17.7,0-32,13.7-32,30.6V224H94.6C77.7,224,64,238.3,64,256  c0,17.7,13.7,32,30.6,32H224v129.4c0,16.9,14.3,30.6,32,30.6c17.7,0,32-13.7,32-30.6V288h129.4c16.9,0,30.6-14.3,30.6-32  C448,238.3,434.3,224,417.4,224z" /></svg>
-                        <span>Add Procedure</span>
+                        <span>Add Service</span>
+                    </a>
+                </div>
+            </li>
+
+            <li @click="isOpenPatient = !isOpenPatient"
+				class="">
+				<button class="flex w-full items-center justify-between cursor-pointer hover:bg-white/10 p-2 rounded-sm ease-in-out duration-200 {{ request()->routeIs('admin.services') ? 'bg-white/10' : '' }}">
+                    <div class="flex gap-2 items-center">
+					<?xml version="1.0" ?><svg fill="currentColor" viewBox="0 0 640 512" width="20"
+						xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M192 256c61.9 0 112-50.1 112-112S253.9 32 192 32 80 82.1 80 144s50.1 112 112 112zm76.8 32h-8.3c-20.8 10-43.9 16-68.5 16s-47.6-6-68.5-16h-8.3C51.6 288 0 339.6 0 403.2V432c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48v-28.8c0-63.6-51.6-110.2-110.2-110.2zM480 256c53 0 96-43 96-96s-43-96-96-96-96 43-96 96 43 96 96 96zm48 32h-3.8c-13.9 4.8-28.6 8-44.2 8s-30.3-3.2-44.2-8H432c-20.4 0-39.2 5.9-55.7 10.4 24.4 26.3 39.7 61.2 39.7 99.8v38.4c0 2.2-.5 4.3-.6 6.4H592c26.5 0 48-21.5 48-48 0-61.9-50.1-112-112-112z" />
+					</svg>
+
+                    <span>Patients</span>
+	            </div>
+	            {{-- arrow --}}
+                <svg fill="currentColor" height="20px" id="Layer_1" style="enable-background:new 0 0 512 512;" version="1.1"
+                    viewBox="0 0 512 512" width="20px" xml:space="preserve" xmlns:xlink="http://www.w3.org/1999/xlink"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        x-bind:d="isOpenProcedure ?
+                            'M413.1,327.3l-1.8-2.1l-136-106.5c-4.6-5.3-11.5-8.6-19.2-8.6c-7.7,0-14.6,3.4-19.2,8.6L101,324.9l-2.3,2.6  C97,330,96,333,96,336.2c0,8.7,7.4,10.8,16.6,10.8v0h286.8v0c9.2,0,16.6-7.1,16.6-10.8C416,332.9,414.9,329.8,413.1,327.3z' :
+                            'M98.9,184.7l1.8,2.1l136,106.5c4.6,5.3,11.5,8.6,19.2,8.6c7.7,0,14.6-3.4,19.2-8.6L411,187.1l2.3-2.6  c1.7-2.5,2.7-5.5,2.7-8.7c0-8.7-7.4-10.8-16.6-10.8v0H112.6v0c-9.2,0-16.6,7.1-16.6,10.8C96,179.1,97.1,182.2,98.9,184.7z'" />
+                </svg>
+                </button>
+                <div x-show="isOpenPatient" class="pl-6 space-y-1">
+                    <a href="{{ route('patients.index') }}" class="flex w-full items-center gap-2 cursor-pointer hover:bg-white/10 p-2 rounded-sm ease-in-out duration-200">
+                    <?xml version="1.0" ?><svg class="bi bi-eye-fill" fill="currentColor" height="19px" viewBox="0 0 16 16" width="19px" xmlns="http://www.w3.org/2000/svg"><path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/><path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/></svg>
+
+                        <span>View Patient</span>
+                    </a>
+                    <a href="{{ route('patients.create') }}" class="flex w-full items-center gap-2 cursor-pointer hover:bg-white/10 p-2 rounded-sm ease-in-out duration-200">
+                    <svg height="19px" id="Layer_1" style="enable-background:new 0 0 512 512;" version="1.1" fill="currentColor" viewBox="0 0 512 512" width="19px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M417.4,224H288V94.6c0-16.9-14.3-30.6-32-30.6c-17.7,0-32,13.7-32,30.6V224H94.6C77.7,224,64,238.3,64,256  c0,17.7,13.7,32,30.6,32H224v129.4c0,16.9,14.3,30.6,32,30.6c17.7,0,32-13.7,32-30.6V288h129.4c16.9,0,30.6-14.3,30.6-32  C448,238.3,434.3,224,417.4,224z" /></svg>
+                        <span>Add Patient</span>
                     </a>
                 </div>
             </li>

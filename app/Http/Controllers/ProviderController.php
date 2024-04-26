@@ -90,22 +90,6 @@ class ProviderController extends Controller
      */
     public function update(UpdateProviderRequest $request, Provider $provider)
     {
-        if ($request->has('avatar')) {
-            $file = $request->file('avatar');
-            $extention  = $file->getClientOriginalExtension();
-
-            $filename = time() . '.' . $extention;
-            $path = 'images/uploads/avatar/';
-            $file->move($path, $filename);
-        } else {
-            $path = 'images/';
-            $filename = 'profile_placeholder.png';
-        }
-
-        $oldAvatar = $provider->avatar;
-        if ($oldAvatar) {
-            Storage::delete($oldAvatar);
-        }
 
         $user = User::where('id', $provider->user->id)->update([
             'first_name' => $request->first_name,
@@ -118,7 +102,6 @@ class ProviderController extends Controller
         ]);
 
         Provider::where('id', $provider->id)->update([
-            'avatar' => $path . $filename,
             'title' => $request->title,
             'specialization' => $request->specialization
         ]);

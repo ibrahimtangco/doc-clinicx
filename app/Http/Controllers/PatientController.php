@@ -16,7 +16,7 @@ class PatientController extends Controller
     {
         $patients = User::where('userType', 'user')->get();
 
-        return view('admin.patients', compact('patients'));
+        return view('admin.patients.index', compact('patients'));
     }
 
     /**
@@ -48,7 +48,7 @@ class PatientController extends Controller
      */
     public function edit(Patient $patient)
     {
-        //
+        return view('admin.patients.edit', compact('patient'));
     }
 
     /**
@@ -64,6 +64,8 @@ class PatientController extends Controller
      */
     public function destroy(Patient $patient)
     {
-        //
+        $patient->delete();
+
+        return back();
     }
 }
