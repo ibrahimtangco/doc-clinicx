@@ -1,7 +1,7 @@
 <x-admin>
 	<x-slot name="header">
 		<h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-			{{ __('Providers') }}
+			<a href="{{ route('providers.index') }}">{{ __('Providers') }}</a>
 		</h2>
 	</x-slot>
 

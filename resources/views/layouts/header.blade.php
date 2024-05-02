@@ -7,6 +7,8 @@
         <link rel="icon" type="image/x-icon" href="{{ asset('images/favicon.png') }}">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
+        {{-- AJAX cdn --}}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
         <!-- Tailwindcss -->
         @vite('resources/css/app.css')

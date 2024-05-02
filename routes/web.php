@@ -5,10 +5,11 @@ use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\BarangayController;
 use App\Http\Controllers\ProviderController;
-use App\Http\Controllers\SuperAdmin\SuperAdminController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Feedback\FeedbackController;
+use App\Http\Controllers\SuperAdmin\SuperAdminController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 /*
@@ -22,6 +23,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 |
 */
 
+Route::get('/import-barangay', [BarangayController::class, 'index']);
 
 // Home Route
 Route::get('/', function () {
@@ -52,10 +54,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         ->name('admin.profile.edit');
 
     Route::resource('admin/providers', ProviderController::class);
+    Route::get('admin/provider/search', [ProviderController::class, 'search']);
+
     Route::resource('admin/services', ServiceController::class);
+    Route::get('admin/service/search', [ServiceController::class, 'search']);
 
     Route::resource('admin/patients', PatientController::class);
-    Route::post('admin/patients', [PatientController::class, 'search'])->name('patients.search');
+    Route::get('admin/patient/search', [PatientController::class, 'search']);
 });
 
 

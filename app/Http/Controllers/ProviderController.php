@@ -60,7 +60,6 @@ class ProviderController extends Controller
 
         Provider::create([
             'user_id' => $user->id,
-            'avatar' => $path . $filename,
             'title' => $request->title,
             'specialization' => $request->specialization
         ]);
@@ -121,5 +120,76 @@ class ProviderController extends Controller
         $user->delete();
 
         return redirect()->route('providers.index')->with('message', 'Providers data has been deleted.');
+    }
+
+    public function search(Request $request)
+    {
+        $request->validate([
+            'search' => 'required|string'
+        ]);
+        $search = $request->search;
+        // Perform the search query
+        $providers = Provider::whereHas('user', function ($query) use ($search) {
+            $query->where(function ($subquery) use ($search) {
+                $subquery->where('title', 'LIKE', '%' . $search . '%')
+                    ->orWhere('title', 'LIKE', str_replace('.', '', '%' . $search . '%')); // Remove dot for matching
+            })
+                ->orWhere('first_name', 'LIKE', '%' . $search . '%')
+                ->orWhere('middle_name', 'LIKE', '%' . $search . '%')
+                ->orWhere('last_name', 'LIKE', '%' . $search . '%')
+                ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $search . '%'])
+                ->orWhereRaw("CONCAT(first_name, ' ', middle_name) LIKE ?", ['%' . $search . '%'])
+                ->orWhereRaw("CONCAT(last_name, ' ', first_name) LIKE ?", ['%' . $search . '%'])
+                ->orWhereRaw("CONCAT(last_name, ' ', middle_name) LIKE ?", ['%' . $search . '%'])
+                ->orWhereRaw("CONCAT(first_name, ' ', middle_name, ' ', last_name) LIKE ?", ['%' . $search . '%'])
+                ->orWhereRaw("CONCAT(first_name, ' ', middle_name) LIKE ?", ['%' . $search . '%'])
+                ->orWhereRaw("CONCAT(last_name, ' ', first_name) LIKE ?", ['%' . $search . '%'])
+                ->orWhereRaw("CONCAT(last_name, ' ', middle_name) LIKE ?", ['%' . $search . '%'])
+                ->orWhereRaw("CONCAT(middle_name, ' ', first_name) LIKE ?", ['%' . $search . '%'])
+                ->orWhereRaw("CONCAT(middle_name, ' ', last_name, ' ', first_name) LIKE ?", ['%' . $search . '%'])
+                ->orWhereRaw("CONCAT(middle_name, ' ', first_name, ' ', last_name) LIKE ?", ['%' . $search . '%'])
+                ->orWhereRaw("CONCAT(last_name, ' ', middle_name, ' ', first_name) LIKE ?", ['%' . $search . '%'])
+                ->orWhereRaw("CONCAT(title, ' ', first_name) LIKE ?", ['%' . $search . '%'])
+                ->orWhereRaw("CONCAT(title, ' ', first_name, ' ', last_name) LIKE ?", ['%' . $search . '%'])
+                ->orWhereRaw("CONCAT(title, ' ', first_name, ' ', last_name, ' ', middle_name) LIKE ?", ['%' . $search . '%'])
+                ->orWhereRaw("CONCAT(title, ' ', last_name) LIKE ?", ['%' . $search . '%'])
+                ->orWhereRaw("CONCAT(title, ' ', last_name, ' ', first_name) LIKE ?", ['%' . $search . '%'])
+                ->orWhereRaw("CONCAT(title, ' ', first_name, ' ', middle_name, ' ', last_name) LIKE ?", ['%' . $search . '%'])
+                ->orWhere('email', 'LIKE', '%' . $search . '%');
+        })
+            ->orWhere('specialization', 'LIKE', '%' . $search . '%')
+            ->get();
+
+
+
+
+        $searchDisplay = '';
+
+        foreach ($providers as $provider) {
+            $searchDisplay .= '
+    <tr class="bg-white border-b hover:bg-gray-50">
+        <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap" scope="row">
+            <a href="' . route('providers.show', ['provider' => $provider->id]) . '">
+                ' . $provider->title . '
+                ' . $provider->user->first_name . '
+                ' . ($provider->user->middle_name ? strtoupper(substr($provider->user->middle_name, 0, 1)) . '. ' : '') . '
+                ' . $provider->user->last_name . '
+            </a>
+        </td>
+        <td class="px-6 py-4">' . $provider->specialization . '</td>
+        <td class="px-6 py-4">' . $provider->user->email . '</td>
+        <td class="px-6 py-4 text-right space-x-2 flex items-center">
+            <a class="font-medium text-white bg-blue-600 px-2 py-1 rounded hover:bg-blue-700"
+                href="' . route('providers.edit', ['provider' => $provider->id]) . '">Edit</a>
+            <form action="' . route('providers.destroy', ['provider' => $provider->id]) . '" method="post">
+                ' . csrf_field() . '
+                ' . method_field('DELETE') . '
+                <button class="font-medium text-red-600" type="submit" onclick="return confirm(\'Are you sure you want to delete ' . $provider->user->first_name . ' ' . $provider->user->last_name . '\\\'s record?\')">Delete</button>
+            </form>
+        </td>
+    </tr>';
+        }
+
+        return response($searchDisplay);
     }
 }

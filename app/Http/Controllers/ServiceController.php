@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Service;
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreServiceRequest;
 use App\Http\Requests\UpdateServiceRequest;
 
@@ -11,7 +12,7 @@ class ServiceController extends Controller
 
     public function display()
     {
-        $services = Service::all();
+        $services = Service::where('availability', 1)->get();
         // dd($services);
         return view('dashboard', ['services' => $services]);
     }
@@ -90,5 +91,48 @@ class ServiceController extends Controller
         $service->delete();
 
         return redirect()->back()->with('message', 'A service has been deleted.');
+    }
+
+    public function search(Request $request)
+    {
+        $request->validate([
+            'search' => 'required|string'
+        ]);
+        $search = $request->search;
+        // Perform the search query
+        $services = Service::where('name', 'LIKE', '%' . $search . '%')
+            ->orWhere('description', 'LIKE', '%' . $search . '%')
+            ->orWhere('duration', 'LIKE', '%' . $search . '%')
+            ->orWhere('price', 'LIKE', '%' . $search . '%')
+            ->get();
+
+
+        $searchDisplay = '';
+
+        foreach ($services as $service) {
+            $searchDisplay .= '
+                    <tr class="bg-white border-b hover:bg-gray-50">
+                    <td class="px-6 py-4">' . $service->name . '</td>
+                    <td class="px-6 py-4">&#8369;' . number_format($service->price, 0, ".", ",") . '</td>
+                    <td class="px-6 py-4">' . $service->description . '</td>
+                    <td class="px-6 py-4 text-center ">
+                        @if ($service->availability)
+                            <span class="text-green-500 text-sm">Available</span>
+                         @else
+                            <span class="text-yellow-500 text-sm">Not Available</span>
+                        @endif
+                    </td>
+                        <td class="px-6 py-4 text-right space-x-2 flex items-center">
+                            <a class="font-medium text-white bg-blue-600 px-2 py-1 rounded hover:bg-blue-700"
+                                href="' . route('services.edit', ['service' => $service->id]) . '">Edit</a>
+                            <form action="' . route('services.destroy', ['service' => $service->id]) . '" method="post">
+                                ' . csrf_field() . '
+                                ' . method_field('DELETE') . '
+                                <button class="font-medium text-red-600" type="submit" onclick="return confirm(`Are you sure you want to delete ' . $service->name . '\' service?`)">Delete</button>
+                            </form>
+                        </td>
+                    </tr>';
+        }
+        return response($searchDisplay);
     }
 }

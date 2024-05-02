@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\City;
 use App\Models\User;
+use App\Models\Barangay;
+use App\Models\Province;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -19,7 +22,8 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+        $provinces = Province::all();
+        return view('auth.register', compact('provinces'));
     }
 
     /**
@@ -33,16 +37,26 @@ class RegisteredUserController extends Controller
             'first_name' => ['required', 'string', 'max:255'],
             'middle_name' => ['max:255'],
             'last_name' => ['required', 'string', 'max:255'],
-            'address' => ['required', 'string', 'max:255'],
+            'province' => ['required', 'string', 'max:255'],
+            'city' => ['required', 'string', 'max:255'],
+            'barangay' => ['required', 'string', 'max:255'],
+            'street' => ['string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Password::defaults()],
         ]);
+        $barangay = Barangay::where('brgy_code', $request->barangay)->value('brgy_name');
+        $city = City::where('city_code', $request->city)->value('city_name');
+        $province = Province::where('province_code', $request->province)->value('province_name');
+        $street = $request->street;
 
+
+        $address = $street . ', ' . $barangay . ', ' . $city . ', ' . $province;
+        // dd($address);
         $user = User::create([
             'first_name' => $request->first_name,
             'middle_name' => $request->middle_name,
             'last_name' => $request->last_name,
-            'address' => $request->address,
+            'address' => $address,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
@@ -51,5 +65,19 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         return redirect(RouteServiceProvider::HOME);
+    }
+
+    public function fetchCity(Request $request)
+    {
+        $data['cities'] = City::where('province_code', $request->province_code)->get();
+
+        return response()->json($data);
+    }
+
+    public function fetchBarangay(Request $request)
+    {
+        $data['barangay'] = Barangay::where('city_code', $request->city_code)->get();
+
+        return response()->json($data);
     }
 }
