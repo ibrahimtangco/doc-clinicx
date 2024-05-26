@@ -51,6 +51,9 @@
 						<th class="px-6 py-3" scope="col">
 							Time
 						</th>
+                        <th class="px-6 py-3" scope="col">
+							Status
+						</th>
 						<th class="px-6 py-3" scope="col">
 							Action
 						</th>
@@ -86,12 +89,24 @@
                                 echo $time;
                             @endphp
 						</td>
+                        <td class="px-6 py-4">
+                            @if ($appointment->status == 'booked')
+                                <span class="text-white bg-yellow-500 px-2 py-0.5 rounded-full">{{ Str::ucfirst($appointment->status)}}</span>
+                            @elseif ($appointment->status == 'cancelled')
+                                <span class="text-white bg-red-500 px-2 py-0.5 rounded-full">{{ Str::ucfirst($appointment->status)}}</span>
+                            @elseif ($appointment->status == 'completed')
+                                <span class="text-white bg-green-500 px-2 py-0.5 rounded-full">{{ Str::ucfirst($appointment->status)}}</span>
 
+                            @endif
+
+                        </td>
 						<td class="px-6 py-4 flex flex-col gap-1 xl:block xl:space-x-1">
-							<a class="font-medium text-center text-white text-[12px] hover:bg-blue-700 bg-blue-600 px-3 py-1 rounded"
-								href="#">Done </a>
-							<a class="font-medium text-center text-white text-[12px] hover:bg-red-700 bg-red-600 px-3 py-1 rounded"
-								href="#">Reject</a>
+							<a class="font-medium text-center text-white hover:bg-blue-700 bg-blue-600 px-3 py-1 rounded-lg flex items-center justify-center gap-1 w-fit"
+								href="{{ route('edit-appointment', $appointment->id) }}">
+                                <?xml version="1.0" ?><svg height="15px" version="1.1" viewBox="0 0 18 18" width="15px" xmlns="http://www.w3.org/2000/svg" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" xmlns:xlink="http://www.w3.org/1999/xlink"><title/><desc/><defs/><g fill="none" fill-rule="evenodd" id="Page-1" stroke="none" stroke-width="1"><g fill="currentColor" id="Core" transform="translate(-213.000000, -129.000000)"><g id="create" transform="translate(213.000000, 129.000000)"><path d="M0,14.2 L0,18 L3.8,18 L14.8,6.9 L11,3.1 L0,14.2 L0,14.2 Z M17.7,4 C18.1,3.6 18.1,3 17.7,2.6 L15.4,0.3 C15,-0.1 14.4,-0.1 14,0.3 L12.2,2.1 L16,5.9 L17.7,4 L17.7,4 Z" id="Shape"/></g></g></g></svg>
+                                <span>View</span>
+                            </a>
+
 						</td>
 					</tr>
                     @endforeach

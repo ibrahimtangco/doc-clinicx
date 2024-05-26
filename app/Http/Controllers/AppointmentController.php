@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Patient;
 use App\Models\Service;
 use Carbon\CarbonPeriod;
 use App\Models\Appointment;
@@ -10,6 +12,7 @@ use App\Models\BusinessHour;
 use Illuminate\Http\Request;
 use App\Notifications\AppointmentBooked;
 use App\Http\Requests\AppointmentRequest;
+use App\Notifications\AppointmentCompleted;
 use Illuminate\Support\Facades\Notification;
 
 class AppointmentController extends Controller
@@ -77,5 +80,42 @@ class AppointmentController extends Controller
             ->notify(new AppointmentBooked($data));
 
         return view('user.user-appointments');
+    }
+
+    public function edit(Appointment $appointment)
+    {
+        $service = Service::findOrFail($appointment->service_id);
+        $user = User::findOrFail($appointment->user_id);
+        $patient = Patient::where('user_id', $appointment->user_id)->firstOrFail();
+
+
+
+        $appointmentInfo = [
+            'service' => $service,
+            'user' => $user,
+            'patient' => $patient,
+            'appointment' => $appointment
+        ];
+        return view('admin.appointments.edit', compact('appointmentInfo'));
+    }
+
+    public function update(Request $request, $appointment)
+    {
+        $appointmentToUpdate = Appointment::findOrFail($appointment);
+        $user = User::findOrFail($appointmentToUpdate->user_id);
+
+        $validatedData = $request->validate([
+            'status' => 'required|in:booked,cancelled,completed',
+            'comment' => 'nullable|string|max:255',
+        ]);
+
+        $updateStatus = $appointmentToUpdate->update($validatedData);
+        if ($appointmentToUpdate->status == 'cancelled') {
+            dd('cancelled');
+        } else if ($appointmentToUpdate->status == 'completed') {
+            $user->notify(new AppointmentCompleted());
+        }
+
+        return back()->with('success', 'Appointment status updated.');
     }
 }

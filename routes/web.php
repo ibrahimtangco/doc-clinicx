@@ -81,6 +81,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('admin/business-hours', [BusinessHourController::class, 'update'])->name('business_hours.update');
 
     Route::get('admin/appointments', [AppointmentController::class, 'displayAppointments'])->name('admin.appointments.view');
+    Route::get('admin/edit-appointment/{appointment}', [AppointmentController::class, 'edit'])->name('edit-appointment');
+    Route::post('admin/edit-appointment/{appointment}', [AppointmentController::class, 'update']);
 
     Route::post('admin/api/fetch-city', [RegisteredUserController::class, 'fetchCity']);
     Route::post('admin/api/fetch-barangay', [RegisteredUserController::class, 'fetchBarangay']);
