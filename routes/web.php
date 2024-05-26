@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\BusinessHour;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\PatientController;
@@ -8,7 +9,10 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\BarangayController;
 use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\BusinessHourController;
 use App\Http\Controllers\Feedback\FeedbackController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\SuperAdmin\SuperAdminController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
@@ -23,26 +27,37 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 |
 */
 
-Route::get('/import-barangay', [BarangayController::class, 'index']);
+// Route::get('/import-barangay', [BarangayController::class, 'index']);
 
 // Home Route
 Route::get('/', function () {
     return view('welcome');
 });
 
+// User View Services
 Route::middleware(['auth', 'verified', 'role:user'])->group(function () {
     Route::get('dashboard', [ServiceController::class, 'display'])->name('user.dashboard');
+
+    Route::get('reserve/{service_id}', [AppointmentController::class, 'index']);
+    Route::post('reserve', [AppointmentController::class, 'reserve'])->name('reserve.appointment');
+    Route::view('my-appointments', 'user.user-appointments')->name('user.appointments');
 });
 
-
+// User Profile Page - Edit
 Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 });
 
-//! Profile Update Route
+//! Profile Update and Delete Route
 Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::post('api/fetch-city', [RegisteredUserController::class, 'fetchCity']);
+    Route::post('api/fetch-barangay', [RegisteredUserController::class, 'fetchBarangay']);
+
+    Route::get('/get-cities/{provinceCode}', [ProfileController::class, 'getCities'])->name('profile.getCities');
+    Route::get('/get-barangays/{cityCode}', [ProfileController::class, 'getBarangays'])->name('profile.getBarangays');
 });
 
 //! Admin Route Controller
@@ -61,15 +76,19 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     Route::resource('admin/patients', PatientController::class);
     Route::get('admin/patient/search', [PatientController::class, 'search']);
+
+    Route::get('admin/business-hours', [BusinessHourController::class, 'index'])->name('admin.business_hours');
+    Route::post('admin/business-hours', [BusinessHourController::class, 'update'])->name('business_hours.update');
+
+    Route::get('admin/appointments', [AppointmentController::class, 'displayAppointments'])->name('admin.appointments.view');
+
+    Route::post('admin/api/fetch-city', [RegisteredUserController::class, 'fetchCity']);
+    Route::post('admin/api/fetch-barangay', [RegisteredUserController::class, 'fetchBarangay']);
 });
-
-
 
 //! Admin Route Views
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('admin/appointments', function () {
-        return view('admin.appointment');
-    })->name('admin.appointments');
+
     Route::get('admin/inventory', function () {
         return view('admin.inventroy');
     })->name('admin.inventory');

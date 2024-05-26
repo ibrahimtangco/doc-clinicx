@@ -6,7 +6,7 @@
 				<!-- Logo -->
 				<div class="shrink-0 flex items-center">
 					<a class="flex items-center" href="{{ url('/') }}">
-						<img alt="" class="w-16 -ml-3" src="{{ asset('images/LOGO_ICON.png') }}">
+						<img alt="" class="w-20 -ml-3" src="{{ asset('images/LOGO_ICON.png') }}">
 						<span class="-ml-1 font-logo text-3xl">DocClinix</span>
 					</a>
 				</div>
@@ -25,7 +25,6 @@
                                 {{ ucfirst(substr(Auth::user()->middle_name, 0, 1)) }}.
                             @endif
                             {{ Auth::user()->last_name }}</span>
-                                <div>{{ Auth::user()->userType }}</div>
                             </div>
 
 							<div class="ms-1">
@@ -49,6 +48,16 @@
 						</x-dropdown-link>
                         @endif
 
+                        @if (auth()->user()->userType == 'user')
+                            <x-dropdown-link :href="route('user.appointments')">
+							{{ __('My Appointments') }}
+						    </x-dropdown-link>
+
+                        @elseif(auth()->user()->userType == 'SuperAdmin')
+                            <x-dropdown-link :href="route('send.feedback')">
+                                {{ __('Appointments') }}
+                            </x-dropdown-link>
+                        @endif
 
 						<x-dropdown-link :href="route('send.feedback')">
 							{{ __('Send Feedback') }}

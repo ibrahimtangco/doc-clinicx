@@ -16,9 +16,9 @@ sans: ['Figtree', ...defaultTheme.fontFamily.sans],
 'logo': 'League Gothic'
 },
 colors: {
-'primary': '#1B3C73',
+'primary': '#03438a',
 'secondary': '#455a64',
-'background-hover': '#1C2434',
+'background-hover': '#1B3C73',
 'link' : '#3C50E0',
 'text-title' : '#111827',
 'text-desc' : '#6b7280',

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Models\City;
 use App\Models\User;
+use App\Models\Patient;
 use App\Models\Barangay;
 use App\Models\Province;
 use Illuminate\View\View;
@@ -33,25 +34,30 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // dd($request->all());
         $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'middle_name' => ['max:255'],
             'last_name' => ['required', 'string', 'max:255'],
+            'telephone' => ['required', 'string', 'min:11', 'max:255'],
+            'birthday' => ['required', 'date'],
+            'age' => ['required', 'integer'],
             'province' => ['required', 'string', 'max:255'],
             'city' => ['required', 'string', 'max:255'],
             'barangay' => ['required', 'string', 'max:255'],
-            'street' => ['string', 'max:255'],
+            'street' => ['max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Password::defaults()],
         ]);
+
+
         $barangay = Barangay::where('brgy_code', $request->barangay)->value('brgy_name');
         $city = City::where('city_code', $request->city)->value('city_name');
         $province = Province::where('province_code', $request->province)->value('province_name');
         $street = $request->street;
-
-
         $address = $street . ', ' . $barangay . ', ' . $city . ', ' . $province;
-        // dd($address);
+
+
         $user = User::create([
             'first_name' => $request->first_name,
             'middle_name' => $request->middle_name,
@@ -60,7 +66,15 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
-        // }
+
+        $patient = Patient::create([
+            'user_id' => $user->id,
+            'telephone' => $request->telephone,
+            'birthday' => $request->birthday,
+            'age' => $request->age,
+            'status' => $request->status
+        ]);
+
         $user->sendEmailVerificationNotification();
         Auth::login($user);
 

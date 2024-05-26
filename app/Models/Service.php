@@ -15,8 +15,6 @@ class Service extends Model
         'duration',
         'price',
         'availability'
-
-
     ];
 
     public function getFormattedDurationAttribute()
@@ -31,5 +29,11 @@ class Service extends Model
         } else {
             return "{$minutes} mins";
         }
+    }
+
+    // service and appointment relationship
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
     }
 }

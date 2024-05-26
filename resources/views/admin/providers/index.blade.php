@@ -7,9 +7,9 @@
 	</x-slot>
 
 	{{-- main container --}}
-	<div class="py-12">
-		<div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="flex items-center justify-between w-full px-4">
+	<div class="py-6">
+		<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+			<div class="flex items-center justify-between w-full">
 				<a class="flex items-center gap-2 bg-primary text-white-text py-1 px-3 rounded-md"
 					href="{{ route('providers.create') }}">
 					<?xml version="1.0" ?><svg height="20" viewBox="0 0 32 32" width="20" xmlns="http://www.w3.org/2000/svg">

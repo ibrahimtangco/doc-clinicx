@@ -111,7 +111,8 @@
 		<iframe frameborder="0" height="100%" loading="lazy" marginheight="0" marginwidth="0"
 			referrerpolicy="no-referrer-when-downgrade" scrolling="no"
 			src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3803.638481998934!2d120.38231127463084!3d17.57239059745028!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x338e658cfeda5f71%3A0xeb1cde8a4557b257!2sFilarca-Rabena%20Dental%20Clinic!5e0!3m2!1sen!2sph!4v1711639439783!5m2!1sen!2sph"
-			style="filter: grayscale(40%)" title="map" width="100%"></iframe>
+			style="filter: grayscale(40%)" title="map" width="100%">
+        </iframe>
 
 	</div>
 	<div class="container px-5 py-24 mx-auto flex">

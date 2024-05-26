@@ -4,10 +4,19 @@
 >
             <li
 				class="cursor-pointer hover:bg-white/10 p-2 rounded-sm ease-in-out duration-200 {{ request()->routeIs('admin.appointments') ? 'bg-white/10' : '' }}">
-				<a class="flex gap-2 items-center " href="{{ url('admin/appointments') }}">
+				<a class="flex gap-2 items-center " href="{{ route('admin.appointments.view') }}">
 					<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" height="19px"width="19px"><path d="M18 4h-1V3a1 1 0 0 0-2 0v1H9V3a1 1 0 0 0-2 0v1H6a3 3 0 0 0-3 3v11a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3ZM8 18a1 1 0 1 1 1-1 1 1 0 0 1-1 1Zm0-4a1 1 0 1 1 1-1 1 1 0 0 1-1 1Zm4 4a1 1 0 1 1 1-1 1 1 0 0 1-1 1Zm0-4a1 1 0 1 1 1-1 1 1 0 0 1-1 1Zm4 0a1 1 0 1 1 1-1 1 1 0 0 1-1 1Zm3-4H5V7a1 1 0 0 1 1-1h1v1a1 1 0 0 0 2 0V6h6v1a1 1 0 0 0 2 0V6h1a1 1 0 0 1 1 1Z" fill="currentColor" class="fill-464646 "></path></svg>
 
 					<span>Appointments</span>
+				</a>
+
+			</li>
+            <li
+				class="cursor-pointer hover:bg-white/10 p-2 rounded-sm ease-in-out duration-200 {{ request()->routeIs('admin.business_hours') ? 'bg-white/10' : '' }}">
+				<a class="flex gap-2 items-center " href="{{ route('admin.business_hours') }}">
+
+                    <?xml version="1.0" ?><svg width="17px" height="17px" fill="currentColor" enable-background="new 0 0 12 12" id="Слой_1" version="1.1" viewBox="0 0 12 12" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M6,0C2.6862793,0,0,2.6862793,0,6s2.6862793,6,6,6s6-2.6862793,6-6S9.3137207,0,6,0z M8.5,6.5h-3v-4h1v3h2  V6.5z"/></svg>
+					<span>Business Hours</span>
 				</a>
 
 			</li>

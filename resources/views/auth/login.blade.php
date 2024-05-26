@@ -1,5 +1,7 @@
 <x-guest-layout>
-	<!-- Session Status -->
+
+	<div class="w-full sm:max-w-md md:max-w-lg mt-6 px-6 py-4 bg-white sm:shadow-md overflow-hidden sm:rounded-lg">
+        <!-- Session Status -->
 	<x-auth-session-status :status="session('status')" class="mb-4" />
 	<div class="mb-8">
 		<h1 class="text-title text-2xl font-semibold">Login your account</h1>
@@ -76,4 +78,5 @@
 			{{ __('Don\'t have an account?') }}
 		</a>
 	</form>
+    </div>
 </x-guest-layout>

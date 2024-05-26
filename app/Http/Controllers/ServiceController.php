@@ -14,7 +14,7 @@ class ServiceController extends Controller
     {
         $services = Service::where('availability', 1)->get();
         // dd($services);
-        return view('dashboard', ['services' => $services]);
+        return view('user/dashboard', ['services' => $services]);
     }
     /**
      * Display a listing of the resource.
