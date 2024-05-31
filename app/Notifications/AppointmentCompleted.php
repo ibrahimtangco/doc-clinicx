@@ -15,8 +15,9 @@ class AppointmentCompleted extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct($appointment)
     {
+        $this->appointment = $appointment;
     }
 
     /**
@@ -44,16 +45,23 @@ class AppointmentCompleted extends Notification
 
     private function formatNote($appointment)
     {
+        return $appointment->comment ?? false;
     }
 
     public function toMail(object $notifiable)
     {
         $fullName = $this->getFullName($notifiable->toArray());
+        $comment = $this->formatNote($this->appointment);
 
         return (new MailMessage)
             ->greeting('Hello ' . $fullName . '!')
-            ->line('Your appointment has been completed')
-            ->line('Thank you for using our application!');
+            ->line('We hope this message finds you well.')
+            ->line('We are pleased to inform you that your recent dental appointment has been successfully completed.')
+            ->line('Here is a comment from your dentist about the consultation:')
+            ->line('**"' . $comment . '"**')
+            ->line('Your dental health is our top priority, and we are glad to have been able to assist you.')
+            ->line('Thank you for choosing our clinic. We look forward to seeing you at your next visit.')
+            ->line('If you have any further questions or need additional support, please don’t hesitate to contact us.');
     }
 
     /**

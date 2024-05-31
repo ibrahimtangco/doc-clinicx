@@ -2,17 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
 use App\Models\User;
+use App\Models\Barangay;
 use App\Models\Provider;
+use App\Models\Province;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreProviderRequest;
 use App\Http\Requests\UpdateProviderRequest;
+use App\Services\AddressService;
 
 class ProviderController extends Controller
 {
+    protected $addressService;
+
+    public function __construct(AddressService $addressService)
+    {
+        $this->addressService = $addressService;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -28,7 +39,8 @@ class ProviderController extends Controller
      */
     public function create()
     {
-        return view('admin.providers.create');
+        $provinces = Province::all();
+        return view('admin.providers.create', compact('provinces'));
     }
 
     /**
@@ -36,23 +48,34 @@ class ProviderController extends Controller
      */
     public function store(StoreProviderRequest $request)
     {
-        if ($request->has('avatar')) {
-            $file = $request->file('avatar');
-            $extention  = $file->getClientOriginalExtension();
+        // if ($request->has('avatar')) {
+        //     $file = $request->file('avatar');
+        //     $extention  = $file->getClientOriginalExtension();
 
-            $filename = time() . '.' . $extention;
-            $path = 'images/uploads/avatar/';
-            $file->move($path, $filename);
+        //     $filename = time() . '.' . $extention;
+        //     $path = 'images/uploads/avatar/';
+        //     $file->move($path, $filename);
+        // } else {
+        //     $path = 'images/';
+        //     $filename = 'profile_placeholder.png';
+        // }
+        $barangay = Barangay::where('brgy_code', $request->barangay)->value('brgy_name');
+        $city = City::where('city_code', $request->city)->value('city_name');
+        $province = Province::where(
+            'province_code',
+            $request->province
+        )->value('province_name');
+        $street = $request->street;
+        if ($street) {
+            $address = $street . ', ' . $barangay . ', ' . $city . ', ' . $province;
         } else {
-            $path = 'images/';
-            $filename = 'profile_placeholder.png';
+            $address = $barangay . ', ' . $city . ', ' . $province;
         }
-
         $user = User::create([
             'first_name' => $request->first_name,
             'middle_name' => $request->middle_name,
             'last_name' => $request->last_name,
-            'address' => $request->address,
+            'address' => $address,
             'email' => $request->email,
             'userType' => $request->userType,
             'password' => Hash::make($request->password)
@@ -80,8 +103,24 @@ class ProviderController extends Controller
      */
     public function edit(Provider $provider)
     {
+        $user = $provider;
+        $currentAddress = $user->user->address;
+        $modifiedAddress = $this->addressService->getAddress($currentAddress);
 
-        return view('admin.providers.edit', ['provider' => $provider]);
+        $provinces = Cache::remember('provinces', 60 * 60, function () {
+            return Province::pluck('province_name', 'province_code')->toArray();
+        });
+
+        $cities = Cache::remember("cities_{$modifiedAddress['province_code']}", 60 * 60, function () use ($modifiedAddress) {
+            return City::where('province_code', $modifiedAddress['province_code'])->pluck('city_name', 'city_code')->toArray();
+        });
+
+        $barangays = Cache::remember("barangays_{$modifiedAddress['city_code']}", 60 * 60, function () use ($modifiedAddress) {
+            return Barangay::where('city_code', $modifiedAddress['city_code'])->pluck('brgy_name', 'brgy_code')->toArray();
+        });
+
+
+        return view('admin.providers.edit', compact('user', 'provinces', 'cities', 'barangays', 'modifiedAddress'));
     }
 
     /**
@@ -90,11 +129,24 @@ class ProviderController extends Controller
     public function update(UpdateProviderRequest $request, Provider $provider)
     {
 
+        $barangay = Barangay::where('brgy_code', $request->barangay)->value('brgy_name');
+        $city = City::where('city_code', $request->city)->value('city_name');
+        $province = Province::where(
+            'province_code',
+            $request->province
+        )->value('province_name');
+        $street = $request->street;
+        if ($street) {
+            $address = $street . ', ' . $barangay . ', ' . $city . ', ' . $province;
+        } else {
+            $address = $barangay . ', ' . $city . ', ' . $province;
+        }
+
         $user = User::where('id', $provider->user->id)->update([
             'first_name' => $request->first_name,
             'middle_name' => $request->middle_name,
             'last_name' => $request->last_name,
-            'address' => $request->address,
+            'address' => $address,
             'email' => $request->email,
             'userType' => $request->userType,
             'password' => Hash::make($request->password)

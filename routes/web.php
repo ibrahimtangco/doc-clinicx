@@ -15,6 +15,7 @@ use App\Http\Controllers\Feedback\FeedbackController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\SuperAdmin\SuperAdminController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\MedicalHistoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,7 +29,9 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 */
 
 // Route::get('/import-barangay', [BarangayController::class, 'index']);
-
+Route::get('/test_log', function () {
+    return 'Hello Log';
+});
 // Home Route
 Route::get('/', function () {
     return view('welcome');
@@ -40,7 +43,8 @@ Route::middleware(['auth', 'verified', 'role:user'])->group(function () {
 
     Route::get('reserve/{service_id}', [AppointmentController::class, 'index']);
     Route::post('reserve', [AppointmentController::class, 'reserve'])->name('reserve.appointment');
-    Route::view('my-appointments', 'user.user-appointments')->name('user.appointments');
+    Route::get('user/appointments/{id}', [AppointmentController::class, 'showMyAppointments'])->name('user.appointments');
+    Route::post('user/appointment/cancel/{id}', [AppointmentController::class, 'userCancel'])->name('user.appointment.cancel');
 });
 
 // User Profile Page - Edit
@@ -77,15 +81,28 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('admin/patients', PatientController::class);
     Route::get('admin/patient/search', [PatientController::class, 'search']);
 
+    Route::get('admin/patients/record/{patient}', [MedicalHistoryController::class, 'show'])->name('show.patient.record');
     Route::get('admin/business-hours', [BusinessHourController::class, 'index'])->name('admin.business_hours');
     Route::post('admin/business-hours', [BusinessHourController::class, 'update'])->name('business_hours.update');
 
     Route::get('admin/appointments', [AppointmentController::class, 'displayAppointments'])->name('admin.appointments.view');
+    Route::get('admin/appointments/history', [AppointmentController::class, 'showAppointmentHistory'])->name('admin.appointments.history');
     Route::get('admin/edit-appointment/{appointment}', [AppointmentController::class, 'edit'])->name('edit-appointment');
     Route::post('admin/edit-appointment/{appointment}', [AppointmentController::class, 'update']);
-
+    Route::post('appointment/{id}/cancel', [AppointmentController::class, 'userCancel']);
     Route::post('admin/api/fetch-city', [RegisteredUserController::class, 'fetchCity']);
     Route::post('admin/api/fetch-barangay', [RegisteredUserController::class, 'fetchBarangay']);
+
+    Route::get('/appointments/filter', [AppointmentController::class, 'filterByStatus']);
+    Route::get('/appointments/filter/date', [AppointmentController::class, 'filterByDate']);
+
+    // API to add providers address
+    Route::post('admin/providers/api/fetch-city', [RegisteredUserController::class, 'fetchCity']);
+    Route::post('admin/providers/api/fetch-barangay', [RegisteredUserController::class, 'fetchBarangay']);
+
+    // API to add patients address
+    Route::post('admin/patients/api/fetch-city', [RegisteredUserController::class, 'fetchCity']);
+    Route::post('admin/patients/api/fetch-barangay', [RegisteredUserController::class, 'fetchBarangay']);
 });
 
 //! Admin Route Views

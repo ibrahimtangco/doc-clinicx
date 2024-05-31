@@ -5,10 +5,10 @@
 		</h2>
 	</x-slot>
 
-	<div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
+	<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="my-8 p-8 bg-white rounded-md border">
 			<h1 class="font-semibold text-lg mb-4">Appointment Details</h1>
-            <div class="grid grid-cols-2 gap-8">
+            <div class="md:grid grid-cols-2 gap-8 space-y-4 md:space-y-0">
                 <div class="flex flex-col gap-2 mt-1">
                     <label>Appointment Date</label>
                     <div class="p-2 border rounded-md bg-gray-100/80">
@@ -25,7 +25,7 @@
         </div>
 		<div class="my-8 p-8 bg-white rounded-md border">
 			<h1 class="font-semibold text-lg mb-4">Patient Information</h1>
-			<div class="grid grid-cols-3 gap-8">
+			<div class="md:grid grid-cols-3 gap-8 space-y-4 md:space-y-0">
 				<div class="flex flex-col gap-2 mt-1">
 					<label>Full Name</label>
 					<div class="p-2 border rounded-md bg-gray-100/80">
@@ -68,7 +68,35 @@
 				</div>
 			</div>
 		</div>
-
+        <div class="my-8 p-8 bg-white rounded-md border">
+            <h1 class="font-semibold text-lg mb-4">Service Details</h1>
+            <div class="md:grid grid-cols-3 gap-8 space-y-4 md:space-y-0">
+				<div class="flex flex-col gap-2 mt-1">
+					<label>Service Name</label>
+					<div class="p-2 border rounded-md bg-gray-100/80">
+						{{ $appointmentInfo['service']->name }}
+					</div>
+				</div>
+                <div class="flex flex-col gap-2 mt-1">
+					<label>Duration</label>
+					<div class="p-2 border rounded-md bg-gray-100/80">
+						{{ $appointmentInfo['service']->formatted_duration }}
+					</div>
+				</div>
+                <div class="flex flex-col gap-2 mt-1">
+					<label>Price</label>
+					<div class="p-2 border rounded-md bg-gray-100/80">
+						&#8369; {{ number_format($appointmentInfo['service']->price, 0, '.'. ',') }}
+					</div>
+				</div>
+                <div class="flex flex-col gap-2 mt-1 col-span-3">
+					<label>Description</label>
+					<div class="p-2 border rounded-md bg-gray-100/80">
+						{{ $appointmentInfo['service']->description }}
+					</div>
+				</div>
+            </div>
+        </div>
         <div class="my-8 p-8 bg-white rounded-md border">
 			<h1 class="font-semibold text-lg mb-4">Appointment Status Update</h1>
             @if (session('success'))
@@ -89,7 +117,7 @@
                     </div>
 
                     <div class="flex flex-col gap-2 mt-1 w-full">
-                        <label for="comment">Dentist Comment</label>
+                        <label for="comment">Dentist Comment / <span class="text-primary">Reason for Cancel</span></label>
                         <textarea name="comment" id="comment" class="w-full border-gray-300 rounded-md bg-gray-100/80">{{ $appointmentInfo['appointment']->comment }}</textarea>
                     </div>
 

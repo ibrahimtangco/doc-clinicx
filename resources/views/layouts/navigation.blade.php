@@ -49,7 +49,7 @@
                         @endif
 
                         @if (auth()->user()->userType == 'user')
-                            <x-dropdown-link :href="route('user.appointments')">
+                            <x-dropdown-link :href="route('user.appointments', auth()->user()->id)">
 							{{ __('My Appointments') }}
 						    </x-dropdown-link>
 

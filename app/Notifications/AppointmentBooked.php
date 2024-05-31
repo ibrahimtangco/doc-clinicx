@@ -35,8 +35,9 @@ class AppointmentBooked extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
+
         return (new MailMessage)
-            ->greeting('Hello')
+            ->greeting("Hello")
             ->line('A new appointment has been booked on')
             ->line("Date: {$this->data['date']}")
             ->line("Time: {$this->data['time']}")

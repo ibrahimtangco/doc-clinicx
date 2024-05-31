@@ -55,8 +55,11 @@ class RegisteredUserController extends Controller
         $city = City::where('city_code', $request->city)->value('city_name');
         $province = Province::where('province_code', $request->province)->value('province_name');
         $street = $request->street;
-        $address = $street . ', ' . $barangay . ', ' . $city . ', ' . $province;
-
+        if ($street) {
+            $address = $street . ', ' . $barangay . ', ' . $city . ', ' . $province;
+        } else {
+            $address = $barangay . ', ' . $city . ', ' . $province;
+        }
 
         $user = User::create([
             'first_name' => $request->first_name,

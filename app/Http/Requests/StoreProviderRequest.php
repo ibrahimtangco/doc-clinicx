@@ -24,13 +24,16 @@ class StoreProviderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg'],
+            // 'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg'],
             'title' => ['string', 'max:255'],
             'first_name' => ['string', 'required', 'max:255'],
             'middle_name' => ['max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'specialization' => ['required', 'max:255'],
-            'address' => ['required', 'string', 'max:255'],
+            'province' => ['required', 'string', 'max:255'],
+            'city' => ['required', 'string', 'max:255'],
+            'barangay' => ['required', 'string', 'max:255'],
+            'street' => ['max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Password::defaults()],
         ];
