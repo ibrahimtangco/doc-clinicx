@@ -16,6 +16,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\SuperAdmin\SuperAdminController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\MedicalHistoryController;
+use Spatie\Activitylog\Models\Activity;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +31,7 @@ use App\Http\Controllers\MedicalHistoryController;
 
 // Route::get('/import-barangay', [BarangayController::class, 'index']);
 Route::get('/test_log', function () {
+    return Activity::all()->last();
     return 'Hello Log';
 });
 // Home Route
