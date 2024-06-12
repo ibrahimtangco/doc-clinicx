@@ -34,7 +34,7 @@
 			<div class="flex flex-col gap-2 w-full max-w-md">
 				<label for="status">Filter By Status</label>
 				<select class="border-gray-300 rounded-md " id="status" name="status">
-					<option value="">Show All</option>
+					<option value="all">Show All</option>
 					<option class="text-green-500" value="completed">Show Completed</option>
 					<option class="text-red-500" value="cancelled">Show Cancelled</option>
 				</select>
@@ -67,28 +67,16 @@
 				@foreach ($appointments as $appointment)
 					<tr class="odd:bg-white even:bg-gray-100 border-b font-medium">
 						<th class="px-6 py-3 font-semibold text-gray-900 whitespace-nowrap" scope="row">
-							{{ $appointment->user->first_name }}
-							@if ($appointment->user->middle_name)
-								{{ ucfirst(substr($appointment->user->middle_name, 0, 1)) }}.
-							@endif
-							{{ $appointment->user->last_name }}
+							{{ $appointment->user->full_name }}
 						</th>
 						<td class="px-6 py-3">
 							{{ $appointment->service->name }}
 						</td>
 						<td class="px-6 py-3">
-							@php
-								$dateString = $appointment->date;
-								$date = new DateTime($dateString);
-								$formattedDate = $date->format('F j, Y');
-								echo $formattedDate;
-							@endphp
+							{{ $appointment->formatted_date }}
 						</td>
 						<td class="px-6 py-3">
-							@php
-								$time = date('g:i A', strtotime($appointment->time));
-								echo $time;
-							@endphp
+							{{ $appointment->formatted_time }}
 						</td>
 						<td class="px-6 py-3 font-semibold">
 
@@ -101,8 +89,8 @@
 						</td>
 						<td class="px-6 py-3 flex flex-col gap-1 xl:block xl:space-x-1">
 							<a
-								class="font-medium text-center text-white hover:bg-blue-700 bg-blue-600 px-3 py-1 rounded-lg flex items-center justify-center gap-1 w-fit"
-								href="{{ route('edit-appointment', $appointment->id) }}">
+								class="font-medium text-white bg-blue-600 px-2 py-1 rounded hover:bg-blue-700 flex items-center justify-center gap-1 w-fit"
+								href="{{ route('edit-appointment', $appointment) }}">
 								<?xml version="1.0" ?><svg height="15px" version="1.1" viewBox="0 0 18 18" width="15px"
 									xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" xmlns:xlink="http://www.w3.org/1999/xlink"
 									xmlns="http://www.w3.org/2000/svg">
@@ -135,5 +123,4 @@
 		</div>
 
 		<script src="{{ asset('js/filterByStatus.js') }}"></script>
-        <script src="{{ asset('js/filterByDate.js') }}"></script>
 </x-admin>

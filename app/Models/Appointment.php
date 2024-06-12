@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Services\AppointmentFormatterService;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Appointment extends Model
 {
@@ -15,34 +16,36 @@ class Appointment extends Model
 
     protected $guarded = [];
 
-    public function getTimeeAttribute()
-    {
-        return $this->attributes['time']->format('H:i');
-    }
-
+    //* RELATIONSHIPS
     // user and appointmetn relationship
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-
     // service and appointmetn relationship
     public function service()
     {
         return $this->belongsTo(Service::class);
     }
 
+    //* ACCESSORS
+    public function getFormattedDateAttribute()
+    {
+        return AppointmentFormatterService::getFormattedDate($this->attributes['date']);
+    }
+
+    public function getFormattedTimeAttribute()
+    {
+        return AppointmentFormatterService::getFormattedTime($this->attributes['time']);
+    }
+
     public function getFormattedDurationAttribute()
     {
-        $hours = floor($this->duration / 60);
-        $minutes = $this->duration % 60;
+        return AppointmentFormatterService::getFormattedDuration($this->attributes['duration']);
+    }
 
-        if ($hours > 0 && $minutes > 0) {
-            return "{$hours} hr {$minutes} mins";
-        } elseif ($hours > 0) {
-            return "{$hours} hr";
-        } else {
-            return "{$minutes} mins";
-        }
+    public function canBeCancelled()
+    {
+        return $this->status != 'cancelled' && now()->diffInMinutes($this->created_at) < 60;
     }
 }

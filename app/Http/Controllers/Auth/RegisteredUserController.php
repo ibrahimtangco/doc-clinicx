@@ -10,6 +10,7 @@ use App\Models\Province;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RegisteredUserRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
@@ -32,34 +33,20 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(RegisteredUserRequest $request): RedirectResponse
     {
-        // dd($request->all());
-        $request->validate([
-            'first_name' => ['required', 'string', 'max:255'],
-            'middle_name' => ['max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'telephone' => ['required', 'string', 'min:11', 'max:255'],
-            'birthday' => ['required', 'date'],
-            'age' => ['required', 'integer'],
-            'province' => ['required', 'string', 'max:255'],
-            'city' => ['required', 'string', 'max:255'],
-            'barangay' => ['required', 'string', 'max:255'],
-            'street' => ['max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-            'password' => ['required', 'confirmed', Password::defaults()],
-        ]);
+        $locationDetails = [
+            'barangay' => Barangay::where('brgy_code', $request->barangay)->value('brgy_name'),
+            'city' => City::where('city_code', $request->city)->value('city_name'),
+            'province' => Province::where('province_code', $request->province)->value('province_name')
+        ];
 
-
-        $barangay = Barangay::where('brgy_code', $request->barangay)->value('brgy_name');
-        $city = City::where('city_code', $request->city)->value('city_name');
-        $province = Province::where('province_code', $request->province)->value('province_name');
-        $street = $request->street;
-        if ($street) {
-            $address = $street . ', ' . $barangay . ', ' . $city . ', ' . $province;
-        } else {
-            $address = $barangay . ', ' . $city . ', ' . $province;
+        if (in_array(null, $locationDetails, true)) {
+            return response()->json(['error' => 'Invalid location details provided.'], 400);
         }
+
+        $street = $request->street;
+        $address = $street ? "$street, {$locationDetails['barangay']}, {$locationDetails['city']}, {$locationDetails['province']}" : "{$locationDetails['barangay']}, {$locationDetails['city']}, {$locationDetails['province']}";
 
         $user = User::create([
             'first_name' => $request->first_name,

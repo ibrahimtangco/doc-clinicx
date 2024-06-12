@@ -52,7 +52,7 @@
 @endif
 
 @if (request()->routeIs('patients.edit'))
-	<div class="md:flex space-y-2 items-center justify-between gap-4 md:space-y-0 mt-4">
+	<div class="md:flex space-y-2 items-center justify-between gap-2 md:space-y-0 mt-4">
 		<div class="w-full">
 			<x-input-label :value="__('Birthday')" for="birthday" />
 			<x-text-input :value="old('birthday', $user->birthday)" autofocus class="mt-1 w-full" id="birthday" name="birthday" type="date" />
@@ -61,12 +61,13 @@
 
 		<div class="w-full">
 			<x-input-label :value="__('Age')" for="age" />
-			<x-text-input :value="old('age', $user->age)" autofocus class="mt-1 w-full" id="age" name="age" type="text" />
+            <input type="text" class="hidden" id="hiddenAge" name="age">
+			<x-text-input :value="old('age', $user->age)" autofocus class="mt-1 w-full" id="age" type="text" />
 			<x-input-error :messages="$errors->get('age')" class="mt-2" />
 		</div>
 	</div>
 @endif
-	<div class="mt-4">
+	<div>
 		<x-input-label :value="__('Province')" for="province" />
 		<select autocomplete="province"
 			class="w-full mt-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" id="province"
@@ -81,7 +82,7 @@
 
 		<x-input-error :messages="$errors->get('province')" class="mt-2" />
 	</div>
-	<div class="mt-4">
+	<div>
 		<x-input-label :value="__('City / Municipality')" for="city" />
 		<select autocomplete="city"
 			class="w-full mt-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" id="city"
@@ -94,7 +95,7 @@
 		</select>
 		<x-input-error :messages="$errors->get('city')" class="mt-2" />
 	</div>
-	<div class="mt-4">
+	<div>
 		<x-input-label :value="__('Barangay')" for="barangay" />
 		<select autocomplete="barangay"
 			class="w-full mt-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" id="barangay"
@@ -111,7 +112,7 @@
 		<x-input-error :messages="$errors->get('barangay')" class="mt-2" />
 	</div>
 
-	<div class="mt-4">
+	<div>
 		<x-input-label :value="__('Street (Optional)')" for="street" />
 		<x-text-input :value="old('street', $modifiedAddress['street_name'])" autocomplete="street" class="block mt-1 w-full" id="street" name="street"
 			type="text" />
@@ -119,14 +120,14 @@
 	</div>
 
     @if (request()->routeIs('patients.edit'))
-	<div class="grid md:grid-cols-2 md:gap-4">
-		<div class="mt-4">
+	<div class="grid md:grid-cols-2 gap-2">
+		<div>
 			<x-input-label :value="__('Phone')" for="telephone" />
 			<x-text-input :value="old('telephone', $user->telephone)" autocomplete="username" class="block mt-1 w-full" id="telephone" name="telephone"
 				type="number" />
 			<x-input-error :messages="$errors->get('telephone')" class="mt-2" />
 		</div>
-		<div class="mt-4">
+		<div>
 			<x-input-label :value="__('Civil Status')" for="status" />
 			<select autocomplete="status"
 				class="w-full mt-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"

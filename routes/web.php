@@ -47,6 +47,9 @@ Route::middleware(['auth', 'verified', 'role:user'])->group(function () {
     Route::post('reserve', [AppointmentController::class, 'reserve'])->name('reserve.appointment');
     Route::get('user/appointments/{id}', [AppointmentController::class, 'showMyAppointments'])->name('user.appointments');
     Route::post('user/appointment/cancel/{id}', [AppointmentController::class, 'userCancel'])->name('user.appointment.cancel');
+    // Route::get('user/appointment/{id}', [AppointmentController::class, 'show'])->name('show.myappointment');
+
+    Route::get('user/appointment/{appointment}', [AppointmentController::class, 'show'])->name('show-appointment');
 });
 
 // User Profile Page - Edit
@@ -105,6 +108,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // API to add patients address
     Route::post('admin/patients/api/fetch-city', [RegisteredUserController::class, 'fetchCity']);
     Route::post('admin/patients/api/fetch-barangay', [RegisteredUserController::class, 'fetchBarangay']);
+
+    // Medical History
+    Route::post('admin/add-medical-history', [MedicalHistoryController::class, 'store'])->name('add.medical.history');
+    Route::put('admin/edit-medical-history/{patient}', [MedicalHistoryController::class, 'update'])->name('edit.medical.history');
 });
 
 //! Admin Route Views

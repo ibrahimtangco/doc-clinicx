@@ -1,6 +1,7 @@
 // birthday age
         const birthday = document.querySelector('#birthday');
         const ageField = document.querySelector('#age');
+        const hiddenAge = document.querySelector('#hiddenAge');
 
         birthday.addEventListener('change', () => {
             const selectedDate = new Date(birthday.value);
@@ -14,4 +15,5 @@
 
             // Set the value of the age field as the calculated age
             ageField.value = age.toString();
+            hiddenAge.value = age.toString();
         });

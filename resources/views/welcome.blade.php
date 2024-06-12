@@ -1,4 +1,5 @@
 @include('layouts.header')
+
 <header class="shadow fixed top-0 left-0 w-full z-50">
 	<x-nav />
 </header>
@@ -37,9 +38,9 @@
 {{-- ABOUT --}}
 <section class="my-20 px-6 bg-primary py-12 " id="about">
 	<div class="max-w-7xl mx-auto md:grid grid-cols-2 gap-4">
-		<div class="col-span-1 place-self-center md:pr-32 space-y-3 md:order-2">
+		<div class="col-span-1 place-self-center md:pr-32 space-y-3 md:order-2 animate__animated animate__fadeInLeft">
 			<h2 class="text-5xl font-semibold text-white mb-4">About Us</h2>
-			<p class="text-white-text">Welcome to DocClinicx, your trusted destination for convenient and professional dental
+			<p class="text-white-text ">Welcome to DocClinicx, your trusted destination for convenient and professional dental
 				care. At DocClinicx, we're
 				committed to providing top-quality oral health services tailored to meet your individual needs.</p>
 

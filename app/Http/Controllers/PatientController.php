@@ -49,7 +49,6 @@ class PatientController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        // dd($request->all());
         $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'middle_name' => ['max:255'],

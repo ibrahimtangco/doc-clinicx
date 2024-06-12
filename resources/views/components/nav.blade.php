@@ -1,4 +1,4 @@
-<nav @click.outside="open = false" class="bg-white md:bg-transparent md:backdrop-blur-md" x-data="{ open: false }">
+<nav @click.outside="open = false" class="bg-white" x-data="{ open: false }">
 	<!-- Primary Navigation Menu -->
 	<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 		<div class="flex justify-between h-16">

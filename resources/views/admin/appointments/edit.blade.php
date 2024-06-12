@@ -86,7 +86,7 @@
                 <div class="flex flex-col gap-2 mt-1">
 					<label>Price</label>
 					<div class="p-2 border rounded-md bg-gray-100/80">
-						&#8369; {{ number_format($appointmentInfo['service']->price, 0, '.'. ',') }}
+						Php {{ number_format($appointmentInfo['service']->price, 0, '.'. ',') }}
 					</div>
 				</div>
                 <div class="flex flex-col gap-2 mt-1 col-span-3">

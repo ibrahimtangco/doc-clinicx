@@ -12,6 +12,7 @@
 		</select>
 	</div>
 @endif
+
 <!-- Name -->
 <div class="md:flex gap-4 space-y-2 md:space-y-0">
 
@@ -55,8 +56,10 @@
 		</div>
 
 		<div class="w-full">
+
 			<x-input-label :value="__('Age')" for="age" />
-			<x-text-input :value="old('age')" autofocus class="mt-1 w-full" id="age" name="age" type="text" />
+            <input type="text" class="hidden" id="hiddenAge" name="age">
+			<x-text-input :value="old('age')" disabled class="mt-1 w-full" id="age" type="text" />
 			<x-input-error :messages="$errors->get('age')" class="mt-2" />
 		</div>
 	</div>

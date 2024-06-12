@@ -14,84 +14,85 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Notifications\AppointmentBooked;
 use App\Http\Requests\AppointmentRequest;
+use App\Http\Requests\AppointmentUpdateStatusRequest;
+use App\Repository\AppointmentRepository;
 use App\Notifications\AppointmentCancelled;
 use App\Notifications\AppointmentCompleted;
+use App\Services\AppointmentService;
+use App\Services\FilterService;
 use Illuminate\Support\Facades\Notification;
 
 class AppointmentController extends Controller
 {
+    protected $appointmentRepository, $appointmentService, $filterService;
+
+    function __construct(
+        AppointmentRepository $appointmentRepository,
+        AppointmentService $appointmentService,
+        FilterService $filterService
+    ) {
+        $this->appointmentRepository = $appointmentRepository;
+        $this->appointmentService = $appointmentService;
+        $this->filterService = $filterService;
+    }
+
     public function showAppointmentHistory()
     {
-        $rawAppointments = Appointment::orderBy('date')->orderBy('time')->where('status', '!=', 'booked')->paginate(10);
-
-        foreach ($rawAppointments as $item) {
-            // Parse the time and format it as desired
-            $formattedTime = Carbon::parse($item->time)->format('H:i');
-
-            // Assign the formatted time to the 'time' property of the appointment object
-            $item->time = $formattedTime;
-        }
-
+        // return all appointment with CANCELLED and COMPLETED status
+        $rawAppointments = $this->appointmentRepository->showHistory();
         return view('admin.appointments.history', ['appointments' => $rawAppointments]);
     }
 
     // show users appointments to that user
     public function showMyAppointments($user_id)
     {
-        $appointments = Appointment::where('user_id', $user_id)->paginate(5);
-
+        // paginate of 5 entries
+        $appointments = $this->appointmentRepository->showUserAppointments($user_id);
         return view('user.user-appointments', compact('appointments'));
     }
 
+    public function show($appointment)
+    {
+        $appointment = Appointment::findOrFail($appointment);
+        $service = Service::where('id', $appointment->service_id)->firstOrFail();
+        $user = auth()->user();
+        $patient = Patient::where('user_id', $user->id)->firstOrFail();
+        $appointmentInfo = [
+            'service' => $service,
+            'user' => $user,
+            'patient' => $patient,
+            'appointment' => $appointment
+        ];
+
+        // dd($appointmentInfo);
+        return view('user.show', compact('appointmentInfo'));
+    }
     // display all appointments to admin
     public function displayAppointments()
     {
-        // $rawAppointments = Appointment::paginate(10);
-        $rawAppointments = Appointment::orderBy('date')->orderBy('time')->where('status', 'booked')->paginate(10);
-        foreach ($rawAppointments as $item) {
-            // Parse the time and format it as desired
-            $formattedTime = Carbon::parse($item->time)->format('H:i');
+        // run this every time booked appointments render to filter out past appointments
+        $this->appointmentRepository->cancelAllBookInThePast();
 
-            // Assign the formatted time to the 'time' property of the appointment object
-            $item->time = $formattedTime;
-        }
+        $appointments = Appointment::orderBy('time')->where('status', 'booked')->paginate(10);
 
-        return view('admin.appointments.view', ['appointments' => $rawAppointments]);
+        return view('admin.appointments.view', compact('appointments'));
     }
 
     // display time slots to user
     public function index($service_id)
     {
-        $services = Service::where('id', $service_id)->get();
-        $arr = $services->toArray();
 
-        $datePeriod = CarbonPeriod::create(now(), now()->addDays(6));
-        $appointments = [];
-        foreach ($datePeriod as $date) {
-            $dayName = $date->format('l');
-
-            $businessHours = BusinessHour::where('day', $dayName)->first();
-            $hours = array_filter($businessHours->TimesPeriod);
-
-            $currentAppointments = Appointment::where('date', $date->toDateString())->pluck('time')->map(function ($time) {
-                return $time->format('H:i');
-            })->toArray();
-
-            $availableHours = array_diff($hours, $currentAppointments);
-            $appointments[] = [
-                'day_name' => $dayName,
-                'date' => $date->format('d M'),
-                'full_date' => $date->format('Y-m-d'),
-                'off' => $businessHours->off,
-                'business_hours' => $hours,
-                'reserved_hours' => $currentAppointments,
-                'available_hours' => $availableHours
-            ];
+        $service = $this->appointmentService->getServiceById($service_id);
+        // dd($service);
+        if (!$service) {
+            return
+                redirect()->back()->with('error', 'Service not found.');
         }
+        $appointments = $this->appointmentService->getAvailableSlots();
 
         return view('user.reserve', [
             'appointments' => $appointments,
-            'service' => $arr[0]
+            'service' => $service
         ]);
     }
 
@@ -115,7 +116,6 @@ class AppointmentController extends Controller
         $user = User::findOrFail($appointment->user_id);
         $patient = Patient::where('user_id', $appointment->user_id)->firstOrFail();
 
-
         $appointmentInfo = [
             'service' => $service,
             'user' => $user,
@@ -126,17 +126,12 @@ class AppointmentController extends Controller
     }
 
     // admin update the status of appointment
-    public function update(Request $request, $appointment)
+    public function update(AppointmentUpdateStatusRequest $request, $appointment)
     {
         $appointmentToUpdate = Appointment::findOrFail($appointment);
         $user = User::findOrFail($appointmentToUpdate->user_id);
 
-        $validatedData = $request->validate([
-            'status' => 'required|in:booked,cancelled,completed',
-            'comment' => 'nullable|string|max:255',
-        ]);
-
-        $appointmentToUpdate->update($validatedData);
+        $appointmentToUpdate->update($request->validated());
 
         if ($appointmentToUpdate->status == 'cancelled') {
             // $user->notify(new AppointmentCancelled($appointmentToUpdate));
@@ -150,13 +145,13 @@ class AppointmentController extends Controller
     // user cancel their appointment
     public function userCancel($id)
     {
-        $appointment = Appointment::findOrFail($id);
+        $appointment = $this->appointmentService->getAppointmentById($id);
 
         $bookingTime = $appointment->created_at;
         $currentTime = Carbon::now();
 
         if ($currentTime->diffInMinutes($bookingTime) < 60) {
-            $appointment->delete();
+            $appointment->update(['status' => 'cancelled']);
             return back()->with('message', 'Appointment cancelled successfully.');
         } else {
             return response()->json(['message' => 'You cannot cancel this appointment anymore']);
@@ -166,16 +161,8 @@ class AppointmentController extends Controller
     // admin filter appointments by status
     public function filterByStatus(Request $request)
     {
-        $status = $request->query('status');
+        $appointments = $this->filterService->filterByStatus($request->query('status'));
 
-        if ($status) {
-            $appointments = Appointment::orderBy('date')->orderBy('time')->with(['user:id,first_name,last_name,middle_name', 'service:id,name'])
-                ->where('status', $status)
-                ->get();
-        } else {
-            $appointments = Appointment::orderBy('date')->orderBy('time')->with(['user:id,first_name,last_name,middle_name', 'service:id,name'])
-                ->get();
-        }
 
         return response()->json($appointments);
     }
@@ -183,17 +170,10 @@ class AppointmentController extends Controller
     // admin filter appointments by date
     public function filterByDate(Request $request)
     {
-        $date = $request->query('dateToFilter');
-        // Log::info($request->all());
 
-        if ($date) {
-            $appointments = Appointment::orderBy('date')->orderBy('time')->with(['user:id,first_name,last_name,middle_name', 'service:id,name'])
-                ->where('date', $date)
-                ->get();
-        } else {
-            $appointments = Appointment::orderBy('date')->orderBy('time')->with(['user:id,first_name,last_name,middle_name', 'service:id,name'])
-                ->get();
-        }
+        $appointments = $this->filterService->filterByDate(
+            $request->query('dateToFilter')
+        );
 
         return response()->json($appointments);
     }

@@ -36,8 +36,8 @@
 
 												<form action="{{ route('reserve.appointment') }}" method="post" id="appointment-form">
 													@csrf
-													<input id="service_id" name="service_id" type="hidden" value=" {{ $service['id'] }}">
-													<input id="service_name" name="service_name" type="hidden" value=" {{ $service['name'] }}">
+													<input id="service_id" name="service_id" type="hidden" value=" {{ $service->id }}">
+													<input id="service_name" name="service_name" type="hidden" value=" {{ $service->name }}">
 													<input id="date" name="date" type="hidden" value=" {{ $appointment['full_date'] }}">
 													<input id="time" name="time" type="hidden" value="{{ $time }}">
 

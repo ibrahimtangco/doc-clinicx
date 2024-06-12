@@ -31,11 +31,15 @@
 			<div></div>
 			{{-- TODO: <x-search id="searchPatient"/> --}}
 		</div>
-		<div class="md:flex items-center gap-4 mt-8 space-y-4 md:space-y-0 px-2 md:px-0">
+		<div class="md:flex items-end gap-4 mt-8 space-y-4 md:space-y-0 px-2 md:px-0">
 			<div class="flex flex-col gap-2 w-full max-w-md">
-                <label for="filter-by-date">Filter By Date</label>
-                <input type="date" name="filter-by-date" id="filter-by-date" class="border-gray-300 rounded-md w-full">
-            </div>
+				<label for="filter-by-date">Filter By Date</label>
+				<div class="flex items-center gap-2">
+					<x-text-input class="border-gray-300 rounded-md w-full" id="filter-by-date" name="filter-by-date" type="date" />
+					<x-primary-button class="py-2.5" onclick="location.reload()">reset</x-primary-button>
+				</div>
+			</div>
+
 		</div>
 		<table class="w-full text-sm text-left rtl:text-right text-secondary-text mt-4 mb-8">
 			<thead class="text-xs text-primary-text uppercase bg-gray-50 border-b font-semibold">
@@ -64,28 +68,16 @@
 				@foreach ($appointments as $appointment)
 					<tr class="odd:bg-white even:bg-gray-100 border-b font-medium">
 						<th class="px-6 py-3 font-semibold text-gray-900 whitespace-nowrap" scope="row">
-							{{ $appointment->user->first_name }}
-							@if ($appointment->user->middle_name)
-								{{ ucfirst(substr($appointment->user->middle_name, 0, 1)) }}.
-							@endif
-							{{ $appointment->user->last_name }}
+							{{ $appointment->user->full_name }}
 						</th>
 						<td class="px-6 py-3">
 							{{ $appointment->service->name }}
 						</td>
 						<td class="px-6 py-3">
-							@php
-								$dateString = $appointment->date;
-								$date = new DateTime($dateString);
-								$formattedDate = $date->format('F j, Y');
-								echo $formattedDate;
-							@endphp
+							{{ $appointment->formatted_date }}
 						</td>
 						<td class="px-6 py-3">
-							@php
-								$time = date('g:i A', strtotime($appointment->time));
-								echo $time;
-							@endphp
+							{{ $appointment->formatted_time }}
 						</td>
 						<td class="px-6 py-3 font-semibold">
 							@if ($appointment->status == 'booked')
@@ -95,11 +87,10 @@
 							@elseif ($appointment->status == 'completed')
 								<span class="text-green-500 px-2 py-0.5 rounded-full">{{ Str::ucfirst($appointment->status) }}</span>
 							@endif
-
 						</td>
 						<td class="px-6 py-3 flex flex-col gap-1 xl:block xl:space-x-1">
 							<a
-								class="font-medium text-center text-white hover:bg-blue-700 bg-blue-600 px-3 py-1 rounded-lg flex items-center justify-center gap-1 w-fit"
+								class="font-medium text-white bg-blue-600 px-2 py-1 rounded hover:bg-blue-700 flex items-center justify-center gap-1 w-fit"
 								href="{{ route('edit-appointment', $appointment->id) }}">
 								<?xml version="1.0" ?><svg height="15px" version="1.1" viewBox="0 0 18 18" width="15px"
 									xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -125,11 +116,11 @@
 				@endforeach
 			</tbody>
 		</table>
-        <div class="text-center error-container"></div>
+		<div class="text-center error-container"></div>
 		<div class="mt-4" id="paginate">
 			{{ $appointments->links('pagination::tailwind') }}
 		</div>
 
 		<script src="{{ asset('js/filterByStatus.js') }}"></script>
-        <script src="{{ asset('js/filterByDate.js') }}"></script>
+		<script src="{{ asset('js/filterByDate.js') }}"></script>
 </x-admin>

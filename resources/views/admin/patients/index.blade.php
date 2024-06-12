@@ -67,11 +67,7 @@
 											href="{{ route('show.patient.record', ['patient' => $patient->id]) }}">View</a>
 										<a class="font-medium text-white bg-gray-600 px-2 py-1 rounded hover:bg-gray-700"
 											href="{{ route('patients.edit', ['patient' => $patient->id]) }}">Edit</a>
-                                       {{-- <form action="{{ route('patients.destroy', ['patient' => $patient->id]) }}" method="post" id="deleteForm">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button class="font-medium text-red-600" type="submit" onclick="return confirm(`Are you sure you want to delete {{ $patient->first_name }} {{ $patient->last_name }}'s record?`)">Delete</button>
-                                        </form> --}}
+
 									</td>
 								</tr>
 							@endforeach

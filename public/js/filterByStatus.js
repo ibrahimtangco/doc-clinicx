@@ -49,8 +49,6 @@ $(document).ready(function() {
 
 						// Construct the formatted time string
 						var formattedTime = hours + ':' + minutes + ' ' + ampm;
-
-
 						var status = appointment.status;
 						var statusClass, statusText;
 						if (status == 'booked') {
@@ -76,7 +74,7 @@ $(document).ready(function() {
 							${appointment.user.first_name} ${middleInitial} ${appointment.user.last_name }
 						</th>
 						<td class="px-6 py-4">
-                            ${appointment.service.name}
+                            ${appointment.service.name} a
 						</td>
 						<td class="px-6 py-4">
 							${formattedDate}
@@ -90,7 +88,7 @@ $(document).ready(function() {
 						<td class="px-6 py-4 flex flex-col gap-1 xl:block xl:space-x-1">
 							<a
 								class="font-medium text-center text-white hover:bg-blue-700 bg-blue-600 px-3 py-1 rounded-lg flex items-center justify-center gap-1 w-fit"
-								href="edit-appointment/${appointment.id}">
+								href="${window.location.origin}/admin/edit-appointment/${appointment.id}">
 								<?xml version="1.0" ?><svg height="15px" version="1.1" viewBox="0 0 18 18" width="15px"
 									xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" xmlns:xlink="http://www.w3.org/1999/xlink"
 									xmlns="http://www.w3.org/2000/svg">

@@ -55,13 +55,13 @@
 								<tr class="bg-white border-b hover:bg-gray-50">
 
 									<td class="px-6 py-4">{{ $service->name }}</td>
-									<td class="px-6 py-4">&#8369;  {{ number_format($service->price, 0, '.', ',') }}</td>
+									<td class="px-6 py-4 text-nowrap">Php  {{ number_format($service->price, 0, '.', ',') }}</td>
                                     <td class="px-6 py-4">{{ $service->description }}</td>
-                                    <td class="px-6 py-4 text-center ">
+                                    <td class="px-6 py-4 text-left ">
                                         @if ($service->availability)
-                                            <span class="text-green-500 text-sm">Available</span>
+                                            <span class="text-green-500 text-sm text-nowrap">Available</span>
                                         @else
-                                            <span class="text-yellow-500 text-sm">Not Available</span>
+                                            <span class="text-yellow-500 text-sm text-nowrap">Not Available</span>
                                         @endif
                                     </td>
 									<td class="px-6 py-4 text-right space-x-2 flex items-center">
@@ -70,7 +70,7 @@
 										<form action="{{ route('services.destroy', ['service' => $service->id]) }}" method="post">
 											@csrf
 											@method('DELETE')
-											<button class="font-medium text-red-600" type="submit">Delete</button>
+											<button class="font-medium text-red-600 hover:underline" type="submit">Delete</button>
 										</form>
 
 									</td>
