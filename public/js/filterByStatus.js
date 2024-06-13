@@ -87,24 +87,12 @@ $(document).ready(function() {
 						</td>
 						<td class="px-6 py-4 flex flex-col gap-1 xl:block xl:space-x-1">
 							<a
-								class="font-medium text-center text-white hover:bg-blue-700 bg-blue-600 px-3 py-1 rounded-lg flex items-center justify-center gap-1 w-fit"
+								class="font-medium text-center text-white hover:bg-blue-700 bg-blue-600 px-2 py-1 rounded flex items-center justify-center gap-1 w-fit"
 								href="${window.location.origin}/admin/edit-appointment/${appointment.id}">
-								<?xml version="1.0" ?><svg height="15px" version="1.1" viewBox="0 0 18 18" width="15px"
-									xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" xmlns:xlink="http://www.w3.org/1999/xlink"
-									xmlns="http://www.w3.org/2000/svg">
-									<title />
-									<desc />
-									<defs />
-									<g fill-rule="evenodd" fill="none" id="Page-1" stroke-width="1" stroke="none">
-										<g fill="currentColor" id="Core" transform="translate(-213.000000, -129.000000)">
-											<g id="create" transform="translate(213.000000, 129.000000)">
-												<path
-													d="M0,14.2 L0,18 L3.8,18 L14.8,6.9 L11,3.1 L0,14.2 L0,14.2 Z M17.7,4 C18.1,3.6 18.1,3 17.7,2.6 L15.4,0.3 C15,-0.1 14.4,-0.1 14,0.3 L12.2,2.1 L16,5.9 L17.7,4 L17.7,4 Z"
-													id="Shape" />
-											</g>
-										</g>
-									</g>
-								</svg>
+								<svg width="15" height="15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
 								<span>View</span>
 							</a>
 

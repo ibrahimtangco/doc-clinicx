@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Auth\Passwords\CanResetPassword;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -70,5 +71,30 @@ class User extends Authenticatable implements MustVerifyEmail
         } else {
             return "$firstName $lastName";
         }
+    }
+
+    public function storeUserDetails($validated, $address)
+    {
+        return User::create([
+            'first_name' => $validated['first_name'],
+            'middle_name' => $validated['middle_name'],
+            'last_name' => $validated['last_name'],
+            'address' => $address,
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+        ]);
+    }
+
+    public function updateUserDetails($validated, $address, $user_id)
+    {
+        $userToUpdate = User::findOrFail($user_id);
+
+        return $userToUpdate->update([
+            'first_name' => $validated['first_name'],
+            'middle_name' => $validated['middle_name'],
+            'last_name' => $validated['last_name'],
+            'address' => $address,
+            'email' => $validated['email'],
+        ]);
     }
 }

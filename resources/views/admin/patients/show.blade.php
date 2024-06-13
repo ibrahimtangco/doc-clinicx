@@ -13,11 +13,7 @@
 				<div class="flex flex-col gap-2 mt-1">
 					<label>Full Name</label>
 					<div class="p-2 border rounded-md bg-gray-100/80">
-						{{ $patient->user->first_name }}
-						@if ($patient->user->middle_name)
-							{{ ucfirst(substr($patient->user->middle_name, 0, 1)) }}.
-						@endif
-						{{ $patient->user->last_name }}
+						{{ $patient->user->full_name }}
 					</div>
 				</div>
 				<div class="flex flex-col gap-2 mt-1">

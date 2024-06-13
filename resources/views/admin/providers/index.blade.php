@@ -31,7 +31,7 @@
 						</g>
 					</svg> {{ __('Add') }}
 				</a>
-				<x-search id="searchDentist"/>
+				<x-search id="searchDentist" />
 			</div>
 			@if (session('message'))
 				<x-alert>
@@ -66,18 +66,37 @@
 									<td class="px-6 py-4">{{ $provider->specialization }}</td>
 									<td class="px-6 py-4">{{ $provider->user->email }}</td>
 									<td class="px-6 py-4 text-right space-x-2 flex items-center">
-										<a class="font-medium text-white bg-blue-600 px-2 py-1 rounded hover:bg-blue-700"
-											href="{{ route('providers.edit', ['provider' => $provider->id]) }}">Edit</a>
-										<form action="{{ route('providers.destroy', ['provider' => $provider->id]) }}" method="post">
+										<a
+											class="font-medium text-white bg-blue-600 px-2 py-1 rounded hover:bg-blue-700 flex items-center justify-center gap-1 w-fit"
+											href="{{ route('providers.edit', ['provider' => $provider->id]) }}">
+											<svg fill="none" height="15" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+												stroke="currentColor" viewBox="0 0 24 24" width="15" xmlns="http://www.w3.org/2000/svg">
+												<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+												<path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+											</svg>
+											<span class="hidden md:block">Edit</span>
+										</a>
+
+										<form action="{{ route('providers.destroy', ['provider' => $provider->id]) }}"
+
+											method="post">
 											@csrf
 											@method('DELETE')
-											<button class="font-medium text-red-600" type="submit" onclick="return confirm(`Are you sure you want to delete {{ $provider->user->first_name }} {{ $provider->user->last_name }}'s record?`)">Delete</button>
+
+											<button class="font-medium text-white bg-red-600 px-2 py-1 rounded hover:bg-red-700 flex items-center justify-center gap-1 w-fit"
+												onclick="return confirm(`Are you sure you want to delete {{ $provider->user->first_name }} {{ $provider->user->last_name }}'s record?`)"
+												type="submit">
+												<svg fill="none" height="15" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+													stroke="currentColor" viewBox="0 0 24 24" width="15" xmlns="http://www.w3.org/2000/svg">
+													<path d="M3 6h18"></path>
+													<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+												</svg><span class="hidden md:block">Delete</span></button>
 										</form>
 									</td>
 								</tr>
 							@endforeach
 						</tbody>
-                        <tbody id="searchData"></tbody>
+						<tbody id="searchData"></tbody>
 					</table>
 				</div>
 			@else
@@ -87,35 +106,34 @@
 		</div>
 	</div>
 
-    <script>
+	<script>
+		// search
+		$('#searchDentist').on('keyup', function() {
 
-// search
-        $('#searchDentist').on('keyup', function() {
+			$searchValue = $(this).val();
 
-		$searchValue = $(this).val();
+			if ($searchValue !== '') {
+				$('#searchData').show();
+				$('#allData').hide();
+			} else {
+				$('#searchData').hide();
+				$('#allData').show();
+			}
 
-        if($searchValue !== ''){
-            $('#searchData').show();
-            $('#allData').hide();
-        }
-        else {
-            $('#searchData').hide();
-            $('#allData').show();
-        }
+			$.ajax({
+				type: 'get',
+				url: '{{ URL::to('admin/provider/search') }}',
+				data: {
+					'search': $searchValue
+				},
 
-        $.ajax({
-            type:'get',
-            url:'{{ URL::to('admin/provider/search') }}',
-            data: {'search':$searchValue},
-
-            success:function(data) {
-                    $('#searchData').html(data);
-            },
-            error: function(xhr, status, error) {
-                console.error(error);
-            }
-        });
-	});
-
-    </script>
+				success: function(data) {
+					$('#searchData').html(data);
+				},
+				error: function(xhr, status, error) {
+					console.error(error);
+				}
+			});
+		});
+	</script>
 </x-admin>

@@ -9,20 +9,24 @@ use App\Models\Barangay;
 use App\Models\Province;
 use Illuminate\Http\Request;
 use App\Services\AddressService;
-use Illuminate\Support\Facades\Hash;
+use App\Services\PatientService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Validation\Rules\Password;
+use App\Http\Requests\PatientStoreRequest;
 use App\Http\Requests\UpdatePatientRequest;
 
 class PatientController extends Controller
 {
 
-    protected $addressService;
+    protected $addressService, $patientModel, $userModel, $patientService;
 
-    public function __construct(AddressService $addressService)
+    public function __construct(AddressService $addressService, PatientService $patientService)
     {
         $this->addressService = $addressService;
+        $this->patientService = $patientService;
+        $this->patientModel = new Patient();
+        $this->userModel = new User();
     }
 
     /**
@@ -47,23 +51,9 @@ class PatientController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(PatientStoreRequest $request): RedirectResponse
     {
-        $request->validate([
-            'first_name' => ['required', 'string', 'max:255'],
-            'middle_name' => ['max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'telephone' => ['required', 'string', 'min:11', 'max:255'],
-            'birthday' => ['required', 'date'],
-            'age' => ['required', 'integer'],
-            'province' => ['required', 'string', 'max:255'],
-            'city' => ['required', 'string', 'max:255'],
-            'barangay' => ['required', 'string', 'max:255'],
-            'street' => ['max:255'],
-            'status' => ['required', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-            'password' => ['required', 'confirmed', Password::defaults()],
-        ]);
+        $validated = $request->validated();
 
         $barangay = Barangay::where('brgy_code', $request->barangay)->value('brgy_name');
         $city = City::where('city_code', $request->city)->value('city_name');
@@ -79,21 +69,10 @@ class PatientController extends Controller
             $address = $barangay . ', ' . $city . ', ' . $province;
         }
 
-        $user = User::create([
-            'first_name' => $request->first_name,
-            'middle_name' => $request->middle_name,
-            'last_name' => $request->last_name,
-            'address' => $address,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-        $patient = Patient::create([
-            'user_id' => $user->id,
-            'telephone' => $request->telephone,
-            'birthday' => $request->birthday,
-            'age' => $request->age,
-            'status' => $request->status
-        ]);
+        DB::transaction(function () use ($validated, $address) {
+            $user = $this->userModel->storeUserDetails($validated, $address);
+            $this->patientModel->storePatientDetails($user->id, $validated);
+        });
 
         return redirect()->route('patients.index');
     }
@@ -127,6 +106,8 @@ class PatientController extends Controller
      */
     public function update(UpdatePatientRequest $request, Patient $patient)
     {
+        $validated = $request->validated();
+
         $barangay = Barangay::where('brgy_code', $request->barangay)->value('brgy_name');
         $city = City::where('city_code', $request->city)->value('city_name');
         $province = Province::where(
@@ -141,20 +122,10 @@ class PatientController extends Controller
             $address = $barangay . ', ' . $city . ', ' . $province;
         }
 
-        $user = User::where('id', $patient->user_id)->update([
-            'first_name' => $request->first_name,
-            'middle_name' => $request->middle_name,
-            'last_name' => $request->last_name,
-            'address' => $address,
-            'email' => $request->email,
-        ]);
-
-        $patient = Patient::where('id', $patient->id)->update([
-            'telephone' => $request->telephone,
-            'birthday' => $request->birthday,
-            'age' => $request->age,
-            'status' => $request->status
-        ]);
+        DB::transaction(function () use ($validated, $address, $patient) {
+            $this->userModel->updateUserDetails($validated, $address, $patient->user_id);
+            $this->patientModel->updatePatientDetails($validated, $patient->id);
+        });
 
         return redirect()->back()->with('message', 'Patient information has been updated.');
     }
@@ -172,48 +143,9 @@ class PatientController extends Controller
 
     public function search(Request $request)
     {
-        $request->validate([
-            'search' => 'required|string'
-        ]);
-        $search = $request->search;
-        // Perform the search query
-        $patients = User::where('userType', 'user')
-            ->where(function ($query) use ($search) {
-                $query->where('first_name', 'LIKE', '%' . $search . '%')
-                    ->orWhere('middle_name', 'LIKE', '%' . $search . '%')
-                    ->orWhere('last_name', 'LIKE', '%' . $search . '%')
-                    ->orWhere('address', 'LIKE', '%' . $search . '%')
-                    ->orWhere('email', 'LIKE', '%' . $search . '%')
-                    ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $search . '%'])
-                    ->orWhereRaw("CONCAT(first_name, ' ', middle_name) LIKE ?", ['%' . $search . '%'])
-                    ->orWhereRaw("CONCAT(last_name, ' ', first_name) LIKE ?", ['%' . $search . '%'])
-                    ->orWhereRaw("CONCAT(last_name, ' ', middle_name) LIKE ?", ['%' . $search . '%'])
-                    ->orWhereRaw("CONCAT(first_name, ' ', middle_name, ' ', last_name) LIKE ?", ['%' . $search . '%']);
-            })
-            ->get();
+        $patients = $this->patientModel->searchPatient($request->search);
+        $searchDisplay = $this->patientService->searchResults($patients);
 
-
-        $searchDisplay = '';
-
-        foreach ($patients as $patient) {
-            $searchDisplay .= '
-<tr class="bg-white border-b hover:bg-gray-50">
-    <td class="px-6 py-4">' . $patient->first_name . '</td>
-    <td class="px-6 py-4">' . $patient->middle_name . '</td>
-    <td class="px-6 py-4">' . $patient->last_name . '</td>
-    <td class="px-6 py-4">' . $patient->address . '</td>
-    <td class="px-6 py-4">' . $patient->email . '</td>
-    <td class="px-6 py-4 text-right space-x-2 flex items-center">
-        <a class="font-medium text-white bg-blue-600 px-2 py-1 rounded hover:bg-blue-700"
-            href="' . route('patients.edit', ['patient' => $patient->id]) . '">Edit</a>
-        <form action="' . route('patients.destroy', ['patient' => $patient->id]) . '" method="post">
-            ' . csrf_field() . '
-            ' . method_field('DELETE') . '
-            <button class="font-medium text-red-600" type="submit" onclick="return confirm(`Are you sure you want to delete ' . $patient->first_name . ' ' . $patient->last_name . '\'s record?`)">Delete</button>
-        </form>
-    </td>
-</tr>';
-        }
         return response($searchDisplay);
     }
 }

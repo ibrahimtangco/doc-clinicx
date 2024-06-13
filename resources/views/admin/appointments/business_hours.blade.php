@@ -23,16 +23,16 @@
 						</div>
 						<input name="data[{{ $businessHour->day }}][day]" type="hidden" value="{{ $businessHour->day }}">
 						<div class="col-span-1 ">
-							<input class="bg-transparent text-center border-0 py-2 border-b" name="data[{{ $businessHour->day }}][from]" placeholder="From" type="text"
+							<input class="bg-transparent text-center border-0 py-2 border-b border-gray-400" name="data[{{ $businessHour->day }}][from]" placeholder="From" type="text"
 								value="{{ $businessHour->from }}">
 						</div>
 
 						<div class="col-span-1 ">
-							<input class="bg-transparent text-center border-0 py-2 border-b" name="data[{{ $businessHour->day }}][to]" placeholder="To" type="text"
+							<input class="bg-transparent text-center border-0 py-2 border-b border-gray-400" name="data[{{ $businessHour->day }}][to]" placeholder="To" type="text"
 								value="{{ $businessHour->to }}">
 						</div>
 						<div class="col-span-1 ">
-							<input class="bg-transparent text-center border-0 py-2 border-b" name="data[{{ $businessHour->day }}][step]" placeholder="Step" type="number"
+							<input class="bg-transparent text-center border-0 py-2 border-b border-gray-400" name="data[{{ $businessHour->day }}][step]" placeholder="Step" type="number"
 								value="{{ $businessHour->step }}">
 						</div>
 
@@ -40,7 +40,7 @@
 							<p>
 								<label>
 									<input @checked($businessHour->off) name="data[{{ $businessHour->day }}][off]"
-										type="checkbox" value="true" />
+										type="checkbox" value="true" class="rounded border-gray-300 border-2"/>
 									<span>OFF</span>
 								</label>
 							</p>

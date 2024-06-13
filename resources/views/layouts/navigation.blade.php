@@ -20,12 +20,8 @@
 						<button
 							class="inline-flex gap-2 items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
 							<div class="flex flex-col items-end gap-1">
-                                <span>{{ Auth::user()->first_name }}
-                            @if (Auth::user()->middle_name)
-                                {{ ucfirst(substr(Auth::user()->middle_name, 0, 1)) }}.
-                            @endif
-                            {{ Auth::user()->last_name }}</span>
-                            </div>
+								{{ auth()->user()->full_name }}
+							</div>
 
 							<div class="ms-1">
 								<svg class="fill-current h-4 w-4" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -38,26 +34,25 @@
 					</x-slot>
 
 					<x-slot name="content">
-                        @if (auth()->user()->userType == 'SuperAdmin')
-                            <x-dropdown-link :href="route('superadmin.profile.edit')">
-							{{ __('Profile') }}
-						</x-dropdown-link>
-                        @else
-                            <x-dropdown-link :href="route('profile.edit')">
-							{{ __('Profile') }}
-						</x-dropdown-link>
-                        @endif
+						@if (auth()->user()->userType == 'SuperAdmin')
+							<x-dropdown-link :href="route('superadmin.profile.edit')">
+								{{ __('Profile') }}
+							</x-dropdown-link>
+						@else
+							<x-dropdown-link :href="route('profile.edit')">
+								{{ __('Profile') }}
+							</x-dropdown-link>
+						@endif
 
-                        @if (auth()->user()->userType == 'user')
-                            <x-dropdown-link :href="route('user.appointments', auth()->user()->id)">
-							{{ __('My Appointments') }}
-						    </x-dropdown-link>
-
-                        @elseif(auth()->user()->userType == 'SuperAdmin')
-                            <x-dropdown-link :href="route('send.feedback')">
-                                {{ __('Appointments') }}
-                            </x-dropdown-link>
-                        @endif
+						@if (auth()->user()->userType == 'user')
+							<x-dropdown-link :href="route('user.appointments', auth()->user()->id)">
+								{{ __('My Appointments') }}
+							</x-dropdown-link>
+						@elseif(auth()->user()->userType == 'SuperAdmin')
+							<x-dropdown-link :href="route('send.feedback')">
+								{{ __('Appointments') }}
+							</x-dropdown-link>
+						@endif
 
 						<x-dropdown-link :href="route('send.feedback')">
 							{{ __('Send Feedback') }}
@@ -112,6 +107,24 @@
 						{{ __('Profile') }}
 					</x-responsive-nav-link>
 				@endif
+
+				@php
+					$user = auth()->user();
+				@endphp
+
+				@switch($user->userType)
+					@case('user')
+						<x-responsive-nav-link :href="route('user.appointments', $user->id)">
+							{{ __('My Appointments') }}
+						</x-responsive-nav-link>
+					@break
+
+					@case('SuperAdmin')
+						<x-responsive-nav-link :href="route('send.feedback')">
+							{{ __('Appointments') }}
+						</x-responsive-nav-link>
+					@break
+				@endswitch
 
 				<!-- Authentication -->
 				<form action="{{ route('logout') }}" method="POST">

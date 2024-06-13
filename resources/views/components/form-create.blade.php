@@ -70,7 +70,7 @@
 		<select autocomplete="province"
 			class="w-full mt-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" id="province"
 			name="province">
-			<option value="">Select Province</option>
+			<option value="">--Select Province--</option>
 			@foreach ($provinces as $province)
 				<option value="{{ $province->province_code }}">{{ $province->province_name }}</option>
 			@endforeach

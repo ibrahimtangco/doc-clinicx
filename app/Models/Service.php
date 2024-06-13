@@ -31,6 +31,12 @@ class Service extends Model
         }
     }
 
+    public function getFormattedPriceAttribute()
+    {
+        return number_format($this->price, 0, '.', ',');
+    }
+
+
     // service and appointment relationship
     public function appointments()
     {

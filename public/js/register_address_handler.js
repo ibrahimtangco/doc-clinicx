@@ -18,6 +18,7 @@ $(document).ready(function() {
                 'province_code': province_code
             },
             success: function(response) {
+                $('#city').empty().append('<option value="">-Select City-</option>');
                 $.each(response.cities, function(index, value) {
                     $('#city').append('<option value="' + value.city_code + '">' + value.city_name + '</option>');
                 });
@@ -37,6 +38,7 @@ $(document).ready(function() {
             },
 
             success: function(response) {
+                $('#barangay').empty().append('<option value="">-Select Barangay-</option>');
                 $.each(response.barangay, function(index, value) {
                     $('#barangay').append('<option value="' + value.brgy_code + '">' + value.brgy_name + '</option>');
                 });

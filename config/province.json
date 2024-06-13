@@ -1,0 +1,25 @@
+[
+  {"province_code":"0128",
+  "province_name":"Ilocos Norte",
+  "psgc_code":"012800000",
+  "region_code":"01"
+  },
+  {
+    "province_code":"0129",
+    "province_name":"Ilocos Sur",
+    "psgc_code":"012900000",
+    "region_code":"01"
+  },
+  {
+    "province_code":"0133",
+    "province_name":"La Union",
+    "psgc_code":"013300000",
+    "region_code":"01"
+    },
+    {
+      "province_code":"0155",
+      "province_name":"Pangasinan",
+      "psgc_code":"015500000",
+      "region_code":"01"
+      }
+    ]

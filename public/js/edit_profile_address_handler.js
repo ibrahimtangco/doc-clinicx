@@ -13,7 +13,8 @@ $(document).ready(function() {
                 url: '/get-cities/' + provinceCode,
                 type: 'GET',
                 success: function(cities) {
-                    $('#city').empty().append('<option value="">Select City</option>');
+                    $('#city').empty().append('<option value="">-Select City-</option>');
+                    $('#barangay').html('')
                     $.each(cities, function(code, name) {
                         $('#city').append('<option value="'+ code +'">'+ name +'</option>');
                     });
@@ -23,8 +24,7 @@ $(document).ready(function() {
                 }
             });
         } else {
-            $('#city').empty().append('<option value="">Select City</option>');
-            $('#barangay').empty().append('<option value="">Select Barangay</option>');
+            $('#barangay').empty().append('<option value="">-Select City-</option>');
         }
     }
 
