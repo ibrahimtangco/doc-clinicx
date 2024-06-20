@@ -1,6 +1,6 @@
-@props(['id'])
+@props(['id', 'value'])
 
-<div class="py-2 max-w-sm">
+<div class="max-w-sm">
 
 	<div class="relative ">
 		<input
@@ -10,7 +10,7 @@
                                     focus:border-indigo-500
                                     focus:ring-indigo-500
                                     focus:outline-none"
-			id="{{ $id }}" type="text" placeholder="Search patient">
+			id="{{ $id }}" type="text" placeholder="Search {{ $value }}">
 
 	</div>
 </div>

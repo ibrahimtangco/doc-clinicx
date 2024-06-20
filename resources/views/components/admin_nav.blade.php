@@ -1,4 +1,4 @@
-<header class="sticky top-0 flex left-0 w-full bg-white shadow z-20 ">
+<header class="sticky top-0 flex left-0 w-full bg-white shadow z-10">
 
 	<div class="flex flex-grow items-center justify-between px-4 py-4 shadow-2 md:px-6 2xl:px-11">
 		<div class="flex items-center lg:hidden">

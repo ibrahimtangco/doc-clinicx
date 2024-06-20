@@ -23,7 +23,7 @@ class AppointmentUpdateStatusRequest extends FormRequest
     {
         return [
             'status' => 'required|in:booked,cancelled,completed',
-            'comment' => 'nullable|string|max:255',
+            'remark' => 'nullable|max:255',
         ];
     }
 }

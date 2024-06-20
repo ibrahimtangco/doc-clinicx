@@ -1,4 +1,4 @@
-<x-admin>
+<x-admin-layout>
 	<x-slot name="header">
 		<h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
 			{{ __('Patients Record') }}
@@ -56,13 +56,6 @@
 			</div>
 		</div>
 		<div class="my-8 p-8 bg-white rounded-md" >
-            @if (session('message'))
-                <x-alert type='success'>{{ session('message') }}</x-alert>
-            @elseif (session('error'))
-                <x-alert type='error'>{{ session('error') }}</x-alert>
-
-            @endif
-
 			<div class="flex items-center mb-6 justify-between">
 				<h1 class="font-semibold text-lg">Medical History</h1>
 				<a class="text-primary cursor-pointer" id="add-medical-history-btn">

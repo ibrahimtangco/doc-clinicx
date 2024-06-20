@@ -1,19 +1,10 @@
-<x-admin>
+<x-admin-layout>
 	<x-slot name="header">
 		<h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
 			<a href="{{ route('providers.index') }}">{{ __('Providers') }}</a>
 		</h2>
 	</x-slot>
 
-@if ($errors->any())
-		<div>
-			<ul>
-				@foreach ($errors->all() as $error)
-					<li>{{ $error }}</li>
-				@endforeach
-			</ul>
-		</div>
-	@endif
 	{{-- main container --}}
 	<div class="py-12">
 		<div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
@@ -21,11 +12,7 @@
 				<div class="max-w-xl">
 					<section>
 						<header>
-							@if (session('message'))
-								<x-alert>
-									{{ session('message') }}
-								</x-alert>
-							@endif
+
 							<h2 class="text-lg font-medium text-gray-900">
 								{{ __('Edit Provider Information') }}
 							</h2>
@@ -49,7 +36,7 @@
 								</div>
 								<x-input-error :messages="$errors->get('title')" class="mt-2" />
 							</div> --}}
-							<x-form-edit :user="$user" :provinces="$provinces" :cities="$cities" :barangays="$barangays" :modifiedAddress="$modifiedAddress" />
+							<x-form-edit :barangays="$barangays" :cities="$cities" :modifiedAddress="$modifiedAddress" :provinces="$provinces" :user="$user" />
 
 							<div class="flex items-center gap-4">
 								<x-primary-button>{{ __('Update') }}</x-primary-button>
@@ -62,4 +49,4 @@
 			</div>
 		</div>
 	</div>
-</x-admin>
+</x-admin-layout>

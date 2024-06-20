@@ -61,8 +61,8 @@
 
 		<div class="w-full">
 			<x-input-label :value="__('Age')" for="age" />
-            <input type="text" class="hidden" id="hiddenAge" name="age">
-			<x-text-input :value="old('age', $user->age)" autofocus class="mt-1 w-full" id="age" type="text" />
+            <input type="text" class="hidden" id="hiddenAge" name="age" value="{{ old('age', $user->age) }}">
+			<x-text-input :value="old('age', $user->age)" disabled autofocus class="mt-1 w-full" id="age" type="text" />
 			<x-input-error :messages="$errors->get('age')" class="mt-2" />
 		</div>
 	</div>

@@ -17,7 +17,12 @@ class Patient extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function storeUPatientDetails($user_id, $validated)
+    public function prescription()
+    {
+        return $this->hasMany(Prescription::class);
+    }
+
+    public function storePatientDetails($user_id, $validated)
     {
         return Patient::create([
             'user_id' => $user_id,
@@ -28,7 +33,7 @@ class Patient extends Model
         ]);
     }
 
-    public function updatePatientDetails($patient_id, $validated)
+    public function updatePatientDetails($validated, $patient_id)
     {
         $patientToUpdate = Patient::findOrFail($patient_id);
 

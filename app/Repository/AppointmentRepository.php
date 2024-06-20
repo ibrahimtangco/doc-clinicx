@@ -10,7 +10,7 @@ class AppointmentRepository
 
     public function showHistory()
     {
-        return Appointment::orderBy('date')->orderBy('time')->where('status', '!=', 'booked')->paginate(10);
+        return Appointment::where('status', '!=', 'booked')->orderBy('date')->orderBy('time')->paginate(10);
     }
 
     public function showUserAppointments($user_id)

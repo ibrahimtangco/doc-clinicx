@@ -1,18 +1,10 @@
-<x-admin>
+<x-admin-layout>
 	<x-slot name="header">
 		<h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
 			<a href="{{ route('providers.index') }}">{{ __('Providers') }}</a>
 		</h2>
 	</x-slot>
-@if ($errors->any())
-		<div>
-			<ul>
-				@foreach ($errors->all() as $error)
-					<li>{{ $error }}</li>
-				@endforeach
-			</ul>
-		</div>
-	@endif
+
 	{{-- main container --}}
 	<div class="py-12">
 		<div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
@@ -46,6 +38,6 @@
 		</div>
 	</div>
 
-    <script src="{{ asset('js/autofill_age.js') }}"></script>
-    <script src="{{ asset('js/register_address_handler.js') }}"></script>
-</x-admin>
+	<script src="{{ asset('js/autofill_age.js') }}"></script>
+	<script src="{{ asset('js/register_address_handler.js') }}"></script>
+</x-admin-layout>

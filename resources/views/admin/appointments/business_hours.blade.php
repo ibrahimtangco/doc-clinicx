@@ -1,4 +1,4 @@
-<x-admin>
+<x-admin-layout>
 	<x-slot name="header">
 		<h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
 			{{ __('Appoinments') }}
@@ -6,12 +6,7 @@
 	</x-slot>
 
 	<div class="container p-8">
-		{{-- <h1 class="center font-semibold text-xl mb-8">
-			Business Hours
-		</h1> --}}
-
 		<div>
-
 			<form action="{{ route('business_hours.update') }}" method="post">
 				@csrf
 				@foreach ($businessHours as $businessHour)
@@ -23,24 +18,25 @@
 						</div>
 						<input name="data[{{ $businessHour->day }}][day]" type="hidden" value="{{ $businessHour->day }}">
 						<div class="col-span-1 ">
-							<input class="bg-transparent text-center border-0 py-2 border-b border-gray-400" name="data[{{ $businessHour->day }}][from]" placeholder="From" type="text"
-								value="{{ $businessHour->from }}">
+							<input class="bg-transparent text-center border-0 py-2 border-b border-gray-400"
+								name="data[{{ $businessHour->day }}][from]" placeholder="From" type="text" value="{{ $businessHour->from }}">
 						</div>
 
 						<div class="col-span-1 ">
-							<input class="bg-transparent text-center border-0 py-2 border-b border-gray-400" name="data[{{ $businessHour->day }}][to]" placeholder="To" type="text"
-								value="{{ $businessHour->to }}">
+							<input class="bg-transparent text-center border-0 py-2 border-b border-gray-400"
+								name="data[{{ $businessHour->day }}][to]" placeholder="To" type="text" value="{{ $businessHour->to }}">
 						</div>
 						<div class="col-span-1 ">
-							<input class="bg-transparent text-center border-0 py-2 border-b border-gray-400" name="data[{{ $businessHour->day }}][step]" placeholder="Step" type="number"
+							<input class="bg-transparent text-center border-0 py-2 border-b border-gray-400"
+								name="data[{{ $businessHour->day }}][step]" placeholder="Step" type="number"
 								value="{{ $businessHour->step }}">
 						</div>
 
 						<div class="col-span-1 ">
 							<p>
 								<label>
-									<input @checked($businessHour->off) name="data[{{ $businessHour->day }}][off]"
-										type="checkbox" value="true" class="rounded border-gray-300 border-2"/>
+									<input @checked($businessHour->off) class="rounded border-gray-300 border-2"
+										name="data[{{ $businessHour->day }}][off]" type="checkbox" value="true" />
 									<span>OFF</span>
 								</label>
 							</p>
@@ -58,4 +54,4 @@
 		</div>
 	</div>
 
-</x-admin>
+</x-admin-layout>

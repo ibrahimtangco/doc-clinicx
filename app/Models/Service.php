@@ -42,4 +42,34 @@ class Service extends Model
     {
         return $this->hasMany(Appointment::class);
     }
+
+    public function storeServicedetails($validated)
+    {
+
+        return Service::create([
+            'name' => $validated['name'],
+            'description' => $validated['description'],
+            'duration' => $validated['duration'],
+            'price' => $validated['price'],
+            'availability' => $validated['availability'] == true ? 1 : 0
+        ]);
+    }
+
+    public function updateServiceDetails($validated, $service_id)
+    {
+        $serviceToUpdate = Service::findOrFail($service_id);
+
+        return $serviceToUpdate->update([
+            'name' => $validated['name'],
+            'description' => $validated['description'],
+            'duration' => $validated['duration'],
+            'price' => $validated['price'],
+            'availability' => array_key_exists('availability', $validated) ? ($validated['availability'] == true ? 1 : 0) : 0,
+        ]);
+    }
+
+    public function deleteService($service)
+    {
+        return $service->delete();
+    }
 }

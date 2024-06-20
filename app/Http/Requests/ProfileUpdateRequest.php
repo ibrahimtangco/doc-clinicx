@@ -23,7 +23,7 @@ class ProfileUpdateRequest extends FormRequest
             'province' => ['required', 'string', 'max:255'],
             'city' => ['required', 'string', 'max:255'],
             'barangay' => ['required', 'string', 'max:255'],
-            'street' => ['max:255', 'string'],
+            'street' => ['max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
         ];
     }

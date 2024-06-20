@@ -1,4 +1,4 @@
-<x-admin>
+<x-admin-layout>
 	<x-slot name="header">
 		<h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
 			<a href="{{ route('services.index') }}">{{ __('Services') }}</a>
@@ -42,13 +42,13 @@
 								<x-input-label :value="__('Duration in Minutes')" for="duration" />
                                 <x-text-input :value="old('duration')" autocomplete="duration" autofocus class="block mt-1 w-full" id="duration"
 									name="duration" type="text" />
-								<x-input-error :messages="$errors->get('price')" class="mt-2" />
+								<x-input-error :messages="$errors->get('duration')" class="mt-2" />
 							</div>
 
 							<div class="mt-4">
 								<x-input-label :value="__('Description')" for="email" />
 								<textarea name="description" id="description" rows="3" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full mt-1"></textarea>
-								<x-input-error :messages="$errors->get('email')" class="mt-2" />
+								<x-input-error :messages="$errors->get('description')" class="mt-2" />
 							</div>
 
                              <div class="mt-4">
@@ -68,4 +68,4 @@
 			</div>
 		</div>
 	</div>
-</x-admin>
+</x-admin-layout>

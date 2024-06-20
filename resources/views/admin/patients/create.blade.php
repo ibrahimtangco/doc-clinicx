@@ -1,4 +1,4 @@
-<x-admin>
+<x-admin-layout>
 	<x-slot name="header">
 		<h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
 			<a href="{{ route('patients.index') }}">{{ __('Patients') }}</a>
@@ -11,11 +11,6 @@
 				<div class="max-w-xl">
 					<section>
 						<header>
-							@if (session('message'))
-								<x-alert>
-									{{ session('message') }}
-								</x-alert>
-							@endif
 							<h2 class="text-lg font-medium text-gray-900">
 								{{ __('Add Patient') }}
 							</h2>
@@ -43,4 +38,4 @@
 
     <script src="{{ asset('js/autofill_age.js') }}"></script>
 	<script src="{{ asset('js/register_address_handler.js') }}"></script>
-</x-admin>
+</x-admin-layout>

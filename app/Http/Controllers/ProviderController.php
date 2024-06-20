@@ -8,21 +8,24 @@ use App\Models\Barangay;
 use App\Models\Provider;
 use App\Models\Province;
 use Illuminate\Http\Request;
+use App\Services\AddressService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cache;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreProviderRequest;
 use App\Http\Requests\UpdateProviderRequest;
-use App\Services\AddressService;
 
 class ProviderController extends Controller
 {
-    protected $addressService;
+    protected $addressService, $providerModel, $userModel;
 
-    public function __construct(AddressService $addressService)
+    public function __construct(AddressService $addressService, Provider $providerModel, User $userModel)
     {
         $this->addressService = $addressService;
+        $this->providerModel = $providerModel;
+        $this->userModel = $userModel;
     }
     /**
      * Display a listing of the resource.
@@ -48,45 +51,27 @@ class ProviderController extends Controller
      */
     public function store(StoreProviderRequest $request)
     {
-        // if ($request->has('avatar')) {
-        //     $file = $request->file('avatar');
-        //     $extention  = $file->getClientOriginalExtension();
+        $validated = $request->validated();
 
-        //     $filename = time() . '.' . $extention;
-        //     $path = 'images/uploads/avatar/';
-        //     $file->move($path, $filename);
-        // } else {
-        //     $path = 'images/';
-        //     $filename = 'profile_placeholder.png';
-        // }
-        $barangay = Barangay::where('brgy_code', $request->barangay)->value('brgy_name');
-        $city = City::where('city_code', $request->city)->value('city_name');
+        $barangay = Barangay::where('brgy_code', $validated->barangay)->value('brgy_name');
+        $city = City::where('city_code', $validated->city)->value('city_name');
         $province = Province::where(
             'province_code',
-            $request->province
+            $validated->province
         )->value('province_name');
-        $street = $request->street;
+        $street = $validated->street;
         if ($street) {
             $address = $street . ', ' . $barangay . ', ' . $city . ', ' . $province;
         } else {
             $address = $barangay . ', ' . $city . ', ' . $province;
         }
-        $user = User::create([
-            'first_name' => $request->first_name,
-            'middle_name' => $request->middle_name,
-            'last_name' => $request->last_name,
-            'address' => $address,
-            'email' => $request->email,
-            'userType' => $request->userType,
-            'password' => Hash::make($request->password)
-        ]);
 
-        Provider::create([
-            'user_id' => $user->id,
-            'title' => $request->title,
-            'specialization' => $request->specialization
-        ]);
+        DB::transaction(function () use ($validated, $address) {
+            $user = $this->userModel->storeUserDetails($validated, $address);
+            $this->providerModel->storeProviderDetails($validated, $user->id);
+        });
 
+        emotify('success', 'Provider created successfully');
         return redirect()->route('providers.index');
     }
 
@@ -128,6 +113,7 @@ class ProviderController extends Controller
      */
     public function update(UpdateProviderRequest $request, Provider $provider)
     {
+        $validated = $request->validated();
 
         $barangay = Barangay::where('brgy_code', $request->barangay)->value('brgy_name');
         $city = City::where('city_code', $request->city)->value('city_name');
@@ -142,22 +128,13 @@ class ProviderController extends Controller
             $address = $barangay . ', ' . $city . ', ' . $province;
         }
 
-        $user = User::where('id', $provider->user->id)->update([
-            'first_name' => $request->first_name,
-            'middle_name' => $request->middle_name,
-            'last_name' => $request->last_name,
-            'address' => $address,
-            'email' => $request->email,
-            'userType' => $request->userType,
-            'password' => Hash::make($request->password)
-        ]);
+        DB::transaction(function () use ($validated, $address, $provider) {
+            $this->userModel->updateUserDetails($validated, $address, $provider->user_id);
+            $this->providerModel->updateProviderDetails($validated, $provider->id);
+        });
 
-        Provider::where('id', $provider->id)->update([
-            'title' => $request->title,
-            'specialization' => $request->specialization
-        ]);
-
-        return redirect()->back()->with('message', 'Providers information has been updated.');
+        emotify('success', 'Providers information has been updated');
+        return redirect()->route('providers.index');
     }
 
     /**
@@ -169,9 +146,14 @@ class ProviderController extends Controller
         $provider = Provider::findOrFail($provider->id);
         $user = User::findOrFail($provider->user->id);
         $provider->delete();
-        $user->delete();
+        $user = $user->delete();
 
-        return redirect()->route('providers.index')->with('message', 'Providers data has been deleted.');
+        if (!$user) {
+            emotify('error', 'Failed to delete provider');
+            return redirect()->route('providers.index');
+        }
+        emotify('success', 'Providers information has been deleted');
+        return redirect()->route('providers.index');
     }
 
     public function search(Request $request)

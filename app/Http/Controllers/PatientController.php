@@ -73,7 +73,7 @@ class PatientController extends Controller
             $user = $this->userModel->storeUserDetails($validated, $address);
             $this->patientModel->storePatientDetails($user->id, $validated);
         });
-
+        emotify('success', 'Patient created successfully');
         return redirect()->route('patients.index');
     }
 
@@ -106,6 +106,7 @@ class PatientController extends Controller
      */
     public function update(UpdatePatientRequest $request, Patient $patient)
     {
+
         $validated = $request->validated();
 
         $barangay = Barangay::where('brgy_code', $request->barangay)->value('brgy_name');
@@ -126,8 +127,8 @@ class PatientController extends Controller
             $this->userModel->updateUserDetails($validated, $address, $patient->user_id);
             $this->patientModel->updatePatientDetails($validated, $patient->id);
         });
-
-        return redirect()->back()->with('message', 'Patient information has been updated.');
+        emotify('success', 'Patiend information has been updated');
+        return redirect()->route('patients.index');
     }
 
     /**
@@ -136,8 +137,13 @@ class PatientController extends Controller
     public function destroy(Patient $patient)
     {
         $user = User::where('id', $patient->user_id)->first();
-        $user->delete();
+        $result = $user->delete();
 
+        if (!$result) {
+            emotify('errpr', 'Failed to delete patient');
+            return redirect()->route('patients.index');
+        }
+        emotify('success', 'Patient deleted successfully');
         return redirect()->route('patients.index');
     }
 

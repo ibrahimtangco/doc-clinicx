@@ -103,9 +103,14 @@ class ProfileController extends Controller
             $request->user()->email_verified_at = null;
         }
 
-        $request->user()->save();
+        $user = $request->user()->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile updated');
+        if (!$user) {
+            emotify('error', 'Failed to update profile');
+            return redirect()->route('profile.edit');
+        }
+        emotify('success', 'Profile updated successfully');
+        return Redirect::route('profile.edit');
     }
 
     /**

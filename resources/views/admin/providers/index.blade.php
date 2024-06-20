@@ -1,4 +1,4 @@
-<x-admin>
+<x-admin-layout>
 	<x-slot name="header">
 		<h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
 			{{ __('Providers') }}
@@ -9,7 +9,7 @@
 	{{-- main container --}}
 	<div class="py-6">
 		<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-			<div class="flex items-center justify-between w-full">
+			<div class="flex items-center justify-between w-full py-2">
 				<a class="flex items-center gap-2 bg-primary text-white-text py-1 px-3 rounded-md"
 					href="{{ route('providers.create') }}">
 					<?xml version="1.0" ?><svg height="20" viewBox="0 0 32 32" width="20" xmlns="http://www.w3.org/2000/svg">
@@ -31,13 +31,8 @@
 						</g>
 					</svg> {{ __('Add') }}
 				</a>
-				<x-search id="searchDentist" />
+				<x-search id="searchDentist" value="Dentist" />
 			</div>
-			@if (session('message'))
-				<x-alert>
-					{{ session('message') }}
-				</x-alert>
-			@endif
 			@if ($providers->count() > 0)
 				<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
 					<table class="w-full text-sm text-left rtl:text-right text-gray-500">
@@ -77,13 +72,12 @@
 											<span class="hidden md:block">Edit</span>
 										</a>
 
-										<form action="{{ route('providers.destroy', ['provider' => $provider->id]) }}"
-
-											method="post">
+										<form action="{{ route('providers.destroy', ['provider' => $provider->id]) }}" method="post">
 											@csrf
 											@method('DELETE')
 
-											<button class="font-medium text-white bg-red-600 px-2 py-1 rounded hover:bg-red-700 flex items-center justify-center gap-1 w-fit"
+											<button
+												class="font-medium text-white bg-red-600 px-2 py-1 rounded hover:bg-red-700 flex items-center justify-center gap-1 w-fit"
 												onclick="return confirm(`Are you sure you want to delete {{ $provider->user->first_name }} {{ $provider->user->last_name }}'s record?`)"
 												type="submit">
 												<svg fill="none" height="15" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -136,4 +130,4 @@
 			});
 		});
 	</script>
-</x-admin>
+</x-admin-layout>

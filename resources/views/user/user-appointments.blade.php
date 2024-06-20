@@ -7,11 +7,14 @@
 
 	<div class="py-12">
 		<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-			<x-alert>
+
 				@if (session('message'))
-					{{ session('message') }}
+					<x-alert type="message" message="{{ session('message') }}" />
+                @elseif (session('error'))
+					<x-alert type="error" message="{{ session('message') }}" />
+
 				@endif
-			</x-alert>
+
 			<table class="w-full text-sm text-left rtl:text-right text-secondary-text mb-8">
 				<thead class="text-xs text-primary-text uppercase bg-gray-50 border-b font-semibold">
 					<tr>

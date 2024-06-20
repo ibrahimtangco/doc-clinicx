@@ -40,7 +40,15 @@ class AppointmentController extends Controller
     {
         // return all appointment with CANCELLED and COMPLETED status
         $rawAppointments = $this->appointmentRepository->showHistory();
-        return view('admin.appointments.history', ['appointments' => $rawAppointments]);
+
+        $userType = auth()->user()->userType;
+
+        $view = match ($userType) {
+            'admin' => 'admin.appointments.history',
+            'SuperAdmin' => 'super_admin.appointments.history',
+        };
+
+        return view($view, ['appointments' => $rawAppointments]);
     }
 
     // show users appointments to that user
@@ -70,12 +78,19 @@ class AppointmentController extends Controller
     // display all appointments to admin
     public function displayAppointments()
     {
-        // run this every time booked appointments render to filter out past appointments
-        $this->appointmentRepository->cancelAllBookInThePast();
+        //? run this every time booked appointments render to filter out past appointments
+        // $this->appointmentRepository->cancelAllBookInThePast();
 
         $appointments = Appointment::orderBy('time')->where('status', 'booked')->paginate(10);
 
-        return view('admin.appointments.view', compact('appointments'));
+        $userType = auth()->user()->userType;
+
+        $view = match ($userType) {
+            'admin' => 'admin.appointments.view',
+            'SuperAdmin' => 'super_admin.appointments.view',
+        };
+
+        return view($view, compact('appointments'));
     }
 
     // display time slots to user
@@ -85,8 +100,9 @@ class AppointmentController extends Controller
         $service = $this->appointmentService->getServiceById($service_id);
         // dd($service);
         if (!$service) {
+            notify()->error('Service not found');
             return
-                redirect()->back()->with('error', 'Service not found.');
+                redirect()->back();
         }
         $appointments = $this->appointmentService->getAvailableSlots();
 
@@ -107,6 +123,11 @@ class AppointmentController extends Controller
         // Notification::route('mail', config('mail.from.address'))
         //     ->notify(new AppointmentBooked($data));
 
+        if (!$appointment) {
+            emotify('error', 'Failed to book appointment');
+            return redirect()->route('user.appointments', auth()->user()->id);
+        }
+        emotify('success', 'Appointment booked successfully');
         return redirect()->route('user.appointments', auth()->user()->id);
     }
 
@@ -122,7 +143,14 @@ class AppointmentController extends Controller
             'patient' => $patient,
             'appointment' => $appointment
         ];
-        return view('admin.appointments.edit', compact('appointmentInfo'));
+
+        $userType = auth()->user()->userType;
+
+        $view = match ($userType) {
+            'admin' => 'admin.appointments.edit',
+            'SuperAdmin' => 'super_admin.appointments.edit'
+        };
+        return view($view, compact('appointmentInfo'));
     }
 
     // admin update the status of appointment
@@ -131,7 +159,7 @@ class AppointmentController extends Controller
         $appointmentToUpdate = Appointment::findOrFail($appointment);
         $user = User::findOrFail($appointmentToUpdate->user_id);
 
-        $appointmentToUpdate->update($request->validated());
+        $appointment = $appointmentToUpdate->update($request->validated());
 
         if ($appointmentToUpdate->status == 'cancelled') {
             // $user->notify(new AppointmentCancelled($appointmentToUpdate));
@@ -139,7 +167,19 @@ class AppointmentController extends Controller
             // $user->notify(new AppointmentCompleted($appointmentToUpdate));
         }
 
-        return back()->with('success', 'Appointment status updated.');
+        $userType = auth()->user()->userType;
+
+        $route = match ($userType) {
+            'admin' => 'admin.appointments.history',
+            'SuperAdmin' => 'superadmin.appointments.history'
+        };
+
+        if (!$appointment) {
+            emotify('error', 'Failed to update appointment status');
+            return redirect()->route($route);
+        }
+        emotify('success', 'Appointment status updated successfully');
+        return redirect()->route($route);
     }
 
     // user cancel their appointment
@@ -152,9 +192,10 @@ class AppointmentController extends Controller
 
         if ($currentTime->diffInMinutes($bookingTime) < 60) {
             $appointment->update(['status' => 'cancelled']);
-            return back()->with('message', 'Appointment cancelled successfully.');
+            emotify('error', 'Appointment cancelled successfully');
+            return redirect()->back();
         } else {
-            return response()->json(['message' => 'You cannot cancel this appointment anymore']);
+            return response()->json(['error' => 'You cannot cancel this appointment anymore']);
         }
     }
 
@@ -162,7 +203,6 @@ class AppointmentController extends Controller
     public function filterByStatus(Request $request)
     {
         $appointments = $this->filterService->filterByStatus($request->query('status'));
-
 
         return response()->json($appointments);
     }

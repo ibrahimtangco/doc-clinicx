@@ -10,6 +10,13 @@ use App\Http\Requests\UpdateServiceRequest;
 class ServiceController extends Controller
 {
 
+    protected $serviceModel;
+
+    function __construct(Service $serviceModel)
+    {
+        $this->serviceModel = $serviceModel;
+    }
+
     public function display()
     {
         $services = Service::where('availability', 1)->get();
@@ -39,23 +46,16 @@ class ServiceController extends Controller
      */
     public function store(StoreServiceRequest $request)
     {
-        Service::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'duration' => $request->duration,
-            'price' => $request->price,
-            'availability' => $request->availability == true ? 1 : 0
-        ]);
+        $validated = $request->validated();
+        $service = $this->serviceModel->storeServicedetails($validated);
 
+        if (!$service) {
+            emotify('error', 'Failed to add service');
+            return redirect()->route('services.index');
+        }
+
+        emotify('success', 'Service added successfully');
         return redirect()->route('services.index');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Service $service)
-    {
-        //
     }
 
     /**
@@ -71,16 +71,17 @@ class ServiceController extends Controller
      */
     public function update(UpdateServiceRequest $request, Service $service)
     {
+        $validated = $request->validated();
 
-        Service::where('id', $service->id)->update([
-            'name' => $request->name,
-            'description' => $request->description,
-            'duration' => $request->duration,
-            'price' => $request->price,
-            'availability' => $request->availability == true ? 1 : 0
-        ]);
+        $service = $this->serviceModel->updateServiceDetails($validated, $service->id);
 
-        return redirect()->back()->with('message', 'Service information has been update.');
+        if (!$service) {
+            emotify('error', 'Failed to update service');
+            return redirect()->route('services.index');
+        }
+
+        emotify('success', 'Service information has been updated');
+        return redirect()->route('services.index');
     }
 
     /**
@@ -88,9 +89,15 @@ class ServiceController extends Controller
      */
     public function destroy(Service $service)
     {
-        $service->delete();
+        $service = $this->serviceModel->deleteService($service);
 
-        return redirect()->back()->with('message', 'A service has been deleted.');
+        if (!$service) {
+            emotify('error', 'Failed to delete service');
+            return redirect()->route('services.index');
+        }
+
+        emotify('success', 'Servvice has been deleted');
+        return redirect()->route('services.index');
     }
 
     public function search(Request $request)

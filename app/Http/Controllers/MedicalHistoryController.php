@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateMedicalHistoryRequest;
-use App\Http\Requests\MedicalHistoryRequest;
 use App\Http\Requests\UpdateMedicalHistoryRequest;
 use App\Models\MedicalHistory;
 use App\Models\Patient;
@@ -30,11 +29,12 @@ class MedicalHistoryController extends Controller
             $validatedData = $request->validated();
             $result = $this->medicalHistoryModel->storeMedicalHistory($validatedData);
 
-            if ($result) {
-                return redirect()->route('show.patient.record', $validatedData['patient_id'])->with('message', 'Medical history added successfully');
-            } else {
-                return redirect()->route('show.patient.record', $validatedData['patient_id'])->with('error', 'Failed to add medical history');
+            if (!$result) {
+                emotify('error', 'Failed to add medical history');
+                return redirect()->route('show.patient.record', $validatedData['patient_id']);
             }
+            emotify('success', 'Medical history added successfully');
+            return redirect()->route('show.patient.record', $validatedData['patient_id']);
         } catch (Exception $e) {
             // Log the error
             return response()->json(['error' => $e->getMessage()], 500);
@@ -47,11 +47,12 @@ class MedicalHistoryController extends Controller
             $validatedData = $request->validated();
             $result = $this->medicalHistoryModel->updateMedicalHistory($validatedData, $patient);
 
-            if ($result) {
-                return redirect()->route('show.patient.record', $patient)->with('message', 'Medical history was updated successfully');
-            } else {
-                return redirect()->route('show.patient.record', $patient)->with('error', 'Failed to update medical history');
+            if (!$result) {
+                emotify('error', 'Failed to update medical history');
+                return redirect()->route('show.patient.record', $patient);
             }
+            emotify('success', 'Medical history was updated successfully');
+            return redirect()->route('show.patient.record', $patient);
         } catch (Exception $e) {
             // Log the error
             return response()->json([

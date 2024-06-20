@@ -12,7 +12,7 @@ class AdminController extends Controller
     public function index()
     {
         $totalPatients = Patient::count();
-        $totalAppointments = Appointment::count();
+        $totalAppointments = Appointment::where('status', 'booked')->count();
         return view('admin.dashboard', [
             'totalPatients' => $totalPatients,
             'totalAppointments' => $totalAppointments

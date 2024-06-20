@@ -27,7 +27,7 @@
 							href="{{ route('admin.dashboard') }}">Dashboard</a>
 					@elseif (auth()->user()->userType == 'SuperAdmin')
 						<a class="px-4 py-2 bg-primary border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-background-hover focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
-							href="{{ route('superadmin.dashboard') }}">Dashboard</a>
+							href="{{ route('superadmin.appointments.view') }}">View Appointments</a>
 					@else
 						<a
 							class="px-4 py-2 bg-primary border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-background-hover focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
@@ -63,13 +63,7 @@
 			<div class="px-4 py-2 bg-indigo-100">
 				<div class="font-medium text-base text-gray-800">
 					@auth
-						{{ Auth::user()->first_name }}
-						@if (Auth::user()->middle_name)
-                            {{ ucfirst(substr(Auth::user()->middle_name, 0, 1)) }}.
-                        @endif
-						{{ Auth::user()->last_name }}
-
-
+						{{ auth()->user()->full_name }}
 					@else
 						Guest
 					@endauth

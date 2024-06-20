@@ -48,15 +48,8 @@
 							<x-dropdown-link :href="route('user.appointments', auth()->user()->id)">
 								{{ __('My Appointments') }}
 							</x-dropdown-link>
-						@elseif(auth()->user()->userType == 'SuperAdmin')
-							<x-dropdown-link :href="route('send.feedback')">
-								{{ __('Appointments') }}
-							</x-dropdown-link>
 						@endif
 
-						<x-dropdown-link :href="route('send.feedback')">
-							{{ __('Send Feedback') }}
-						</x-dropdown-link>
 
 						<!-- Authentication -->
 						<form action="{{ route('logout') }}" method="POST">
@@ -116,12 +109,6 @@
 					@case('user')
 						<x-responsive-nav-link :href="route('user.appointments', $user->id)">
 							{{ __('My Appointments') }}
-						</x-responsive-nav-link>
-					@break
-
-					@case('SuperAdmin')
-						<x-responsive-nav-link :href="route('send.feedback')">
-							{{ __('Appointments') }}
 						</x-responsive-nav-link>
 					@break
 				@endswitch

@@ -1,7 +1,6 @@
 <div class="flex flex-col gap-2 px-6 mb-2">
 	<h2 class="font-medium text-white-text/75 mb-4">ACTIONS</h2>
 	<ul class="font-medium space-y-1" x-data="{ isOpenProvider: false, isOpenProcedure: false, isOpenPatient: false, isOpenAppointment: false }">
-
 		<li @click="isOpenAppointment = !isOpenAppointment" class="">
 			<button
 				class="flex  w-full items-center justify-between cursor-pointer hover:bg-white/10 p-2 rounded-sm ease-in-out duration-200 {{ request()->routeIs('admin.providers') ? 'bg-white/10' : '' }}  ">

@@ -16,8 +16,13 @@ class BusinessHourController extends Controller
 
     public function update(BusinessHoursRequest $request)
     {
-        BusinessHour::query()->upsert($request->validated()['data'], ['day']);
+        $businessHours = BusinessHour::query()->upsert($request->validated()['data'], ['day']);
 
-        return back();
+        if (!$businessHours) {
+            emotify('error', 'Filed to update business hours');
+            return redirect()->back();
+        }
+        emotify('success', 'Business hours updated successfully');
+        return redirect()->back();
     }
 }
