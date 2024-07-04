@@ -51,7 +51,8 @@ class Service extends Model
             'description' => $validated['description'],
             'duration' => $validated['duration'],
             'price' => $validated['price'],
-            'availability' => $validated['availability'] == true ? 1 : 0
+            'availability' =>
+            array_key_exists('availability', $validated) ? ($validated['availability'] == true ? 1 : 0) : 0,
         ]);
     }
 

@@ -100,11 +100,6 @@
 			</div>
 			<div class="my-8 p-8 bg-white rounded-md border">
 				<h1 class="font-semibold text-lg mb-4">Appointment Status Update</h1>
-				@if (session('success'))
-					<x-alert>
-						{{ session('success') }}
-					</x-alert>
-				@endif
 				<div class=" gap-8">
 					<div class="space-y-4">
 						<div class="flex flex-col gap-2 mt-1">

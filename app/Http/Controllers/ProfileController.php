@@ -25,20 +25,24 @@ class ProfileController extends Controller
 
     public function getCities($provinceCode)
     {
-        $cities = Cache::remember("cities_{$provinceCode}", 60 * 60, function () use ($provinceCode) {
-            return City::where('province_code', $provinceCode)->pluck('city_name', 'city_code')->toArray();
+        $cities = json_decode(file_get_contents(config_path('cities.json')), true);
+        $filteredCities['cities'] = array_filter($cities, function ($city) use ($provinceCode) {
+            return $city['province_code'] === $provinceCode;
         });
 
-        return response()->json($cities);
+
+        return response()->json($filteredCities);
     }
 
     public function getBarangays($cityCode)
     {
-        $barangays = Cache::remember("barangays_{$cityCode}", 60 * 60, function () use ($cityCode) {
-            return Barangay::where('city_code', $cityCode)->pluck('brgy_name', 'brgy_code')->toArray();
+        $barangays = json_decode(file_get_contents(config_path('barangay.json')), true);
+
+        $filteredBarangay['barangays'] = array_filter($barangays, function ($barangay) use ($cityCode) {
+            return $barangay['city_code'] === $cityCode;
         });
 
-        return response()->json($barangays);
+        return response()->json($filteredBarangay);
     }
 
     /**
@@ -50,16 +54,16 @@ class ProfileController extends Controller
         $currentAddress = $user->address;
         $modifiedAddress = $this->addressService->getAddress($currentAddress);
 
-        $provinces = Cache::remember('provinces', 60 * 60, function () {
-            return Province::pluck('province_name', 'province_code')->toArray();
+        $provinces = json_decode(file_get_contents(config_path('province.json')), true);
+
+        $rawCities = json_decode(file_get_contents(config_path('cities.json')), true);
+        $cities = array_filter($rawCities, function ($city) use ($modifiedAddress) {
+            return $city['province_code'] === $modifiedAddress['province_code'];
         });
 
-        $cities = Cache::remember("cities_{$modifiedAddress['province_code']}", 60 * 60, function () use ($modifiedAddress) {
-            return City::where('province_code', $modifiedAddress['province_code'])->pluck('city_name', 'city_code')->toArray();
-        });
-
-        $barangays = Cache::remember("barangays_{$modifiedAddress['city_code']}", 60 * 60, function () use ($modifiedAddress) {
-            return Barangay::where('city_code', $modifiedAddress['city_code'])->pluck('brgy_name', 'brgy_code')->toArray();
+        $rawBarangays = json_decode(file_get_contents(config_path('barangay.json')), true);
+        $barangays = array_filter($rawBarangays, function ($barangay) use ($modifiedAddress) {
+            return $barangay['city_code'] ===  $modifiedAddress['city_code'];
         });
 
         // $street = $request->street;
@@ -79,18 +83,32 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
+        $rawBarangays = json_decode(file_get_contents(config_path('barangay.json')), true);
+        $barangay = array_filter($rawBarangays, function ($barangay) use ($request) {
+            return $barangay['brgy_code'] ===  $request->barangay;
+        });
+        $barangay = reset($barangay); // Get the first (and only) barangay if it exists
 
-        $barangay = Barangay::where('brgy_code', $request->barangay)->value('brgy_name');
-        $city = City::where('city_code', $request->city)->value('city_name');
-        $province = Province::where('province_code', $request->province)->value('province_name');
+        $rawCities = json_decode(file_get_contents(config_path('cities.json')), true);
+        $city = array_filter($rawCities, function ($city) use ($request) {
+            return $city['city_code'] === $request->city;
+        });
+        $city = reset($city); // Get the first (and only) city if it exists
+
+        $rawProvinces = json_decode(file_get_contents(config_path('province.json')), true);
+        $province = array_filter($rawProvinces, function ($province) use ($request) {
+            return $province['province_code'] === $request->province;
+        });
+        $province = reset($province); // Get the first (and only) province if it exists
+
         $street = $request->street;
 
         if ($street) {
-            $address = $street . ', ' . $barangay . ', ' . $city . ', ' . $province;
+            $address = $street . ', ' . $barangay['brgy_name'] . ', ' . $city['city_name'] . ', ' . $province['province_name'];
         } else {
-            $address = $barangay . ', ' . $city . ', ' . $province;
+            $address = $barangay['brgy_name'] . ', ' . $city['city_name'] . ', ' . $province['province_name'];
         }
-        // dd($request->all());
+
         $request->user()->update([
             'first_name' => $request->first_name,
             'middle_name' => $request->middle_name,

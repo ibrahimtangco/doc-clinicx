@@ -3,6 +3,7 @@
 		<h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
 			{{ __('View Appoinment') }}
 		</h2>
+        <x-back/>
 	</x-slot>
 
 	<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -103,7 +104,7 @@
 				<a class="text-primary underline" href="{{ route('create.prescription', ['patient' => $appointmentInfo['patient']]) }}">Write prescription</a>
 			</div>
 			<div class=" gap-8">
-				<form action="{{ route('edit-appointment', $appointmentInfo['appointment']->id) }}" class="space-y-4"
+				<form action="{{ route('superadmin.edit-appointment', $appointmentInfo['appointment']->id) }}" class="space-y-4"
 					method="POST">
 					@csrf
 					<div class="flex flex-col gap-2 mt-1">

@@ -30,7 +30,7 @@
 	<div>
 		{{ $slot }}
 	</div>
-	<x-notify::notify style="z-index: 99999;"/>
+	<x-notify::notify"/>
 	@notifyJs
 </body>
 

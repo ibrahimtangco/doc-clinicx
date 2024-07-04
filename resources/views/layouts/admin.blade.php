@@ -1,11 +1,11 @@
 <x-master-layout>
 
 	<!-- ===== Page Wrapper Start ===== -->
-	<div class="flex h-screen overflow-y-hidden bg-gray-100">
+	<div class="flex h-screen overflow-y-hidden bg-gray-100 overflow-x-auto">
 		<!-- ===== Sidebar Start ===== -->
 		<x-admin_sidebar />
 		<!-- ===== Sidebar End ===== -->
-		<div class="flex-1 overflow-y-auto overflow-x-hidden w-full">
+		<div class="flex-1 overflow-y-auto  w-full">
 			<!-- ===== Header Start ===== -->
 			<x-admin_nav />
 			<!-- Page Heading -->

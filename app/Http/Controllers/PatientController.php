@@ -55,11 +55,11 @@ class PatientController extends Controller
     {
         $validated = $request->validated();
 
-        $barangay = Barangay::where('brgy_code', $request->barangay)->value('brgy_name');
-        $city = City::where('city_code', $request->city)->value('city_name');
+        $barangay = Barangay::where('brgy_code', $validated['barangay'])->value('brgy_name');
+        $city = City::where('city_code', $validated['city'])->value('city_name');
         $province = Province::where(
             'province_code',
-            $request->province
+            $validated['province']
         )->value('province_name');
         $street = $request->street;
 
@@ -109,13 +109,13 @@ class PatientController extends Controller
 
         $validated = $request->validated();
 
-        $barangay = Barangay::where('brgy_code', $request->barangay)->value('brgy_name');
-        $city = City::where('city_code', $request->city)->value('city_name');
+        $barangay = Barangay::where('brgy_code', $validated['barangay'])->value('brgy_name');
+        $city = City::where('city_code', $validated['city'])->value('city_name');
         $province = Province::where(
             'province_code',
-            $request->province
+            $validated['province']
         )->value('province_name');
-        $street = $request->street;
+        $street = $validated['street'];
 
         if ($street) {
             $address = $street . ', ' . $barangay . ', ' . $city . ', ' . $province;

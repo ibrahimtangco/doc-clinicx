@@ -8,7 +8,7 @@
 
 	{{-- main container --}}
 
-	<div class="py-6">
+	<div class="py-6 px-4">
 		<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 			<div class="flex items-center justify-between w-full py-2">
 				<a class="flex items-center gap-2 bg-primary text-white-text py-1 px-3 rounded-md"
@@ -37,7 +37,7 @@
 
 			@if ($patients->count() > 0)
 				<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-					<table class="w-full text-sm text-left rtl:text-right text-gray-500">
+					<table class="p-2 w-full text-sm text-left rtl:text-right text-gray-500">
 						<div id="all">
 							<thead class="text-xs text-gray-700 uppercase bg-gray-50">
 								<tr>

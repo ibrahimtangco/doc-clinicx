@@ -1,7 +1,7 @@
 <x-app-layout>
 	<x-slot name="header">
 		<h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-			<a href="{{ route('prescriptions.index') }}">{{ __('Prescription') }}</a>
+			<a href="{{ route('superadmin.prescriptions.index') }}">{{ __('Prescription') }}</a>
 		</h2>
 	</x-slot>
 
@@ -20,7 +20,7 @@
 							</p>
 						</header>
 
-						<form action="{{ route('prescriptions.store') }}" class="mt-6 space-y-6" id="myForm" method="post">
+						<form action="{{ route('superadmin.prescriptions.store') }}" class="mt-6 space-y-6" id="myForm" method="post">
 							@csrf
 
 							<table class="w-full text-sm text-left rtl:text-right text-gray-500">

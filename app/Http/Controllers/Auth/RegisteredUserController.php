@@ -73,15 +73,30 @@ class RegisteredUserController extends Controller
 
     public function fetchCity(Request $request)
     {
-        $data['cities'] = City::where('province_code', $request->province_code)->get();
+        $province_code = $request->province_code;
 
-        return response()->json($data);
+        $cities = json_decode(file_get_contents(config_path('cities.json')), true);
+        // $data['cities'] = City::where('province_code', $request->province_code)->get();
+
+        $filteredCities['cities'] = array_filter($cities, function ($city) use ($province_code) {
+            return $city['province_code'] === $province_code;
+        });
+
+
+        return response($filteredCities);
     }
 
     public function fetchBarangay(Request $request)
     {
-        $data['barangay'] = Barangay::where('city_code', $request->city_code)->get();
+        $city_code = $request->city_code;
 
-        return response()->json($data);
+        $barangays = json_decode(file_get_contents(config_path('barangay.json')), true);
+
+        $filteredBarangay['barangay'] = array_filter($barangays, function ($barangay) use ($city_code) {
+            return $barangay['city_code'] === $city_code;
+        });
+        // $data['barangay'] = Barangay::where('city_code', $request->city_code)->get();
+
+        return response()->json($filteredBarangay);
     }
 }

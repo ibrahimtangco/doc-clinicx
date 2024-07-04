@@ -96,7 +96,7 @@ class ServiceController extends Controller
             return redirect()->route('services.index');
         }
 
-        emotify('success', 'Servvice has been deleted');
+        emotify('success', 'Service has been deleted');
         return redirect()->route('services.index');
     }
 

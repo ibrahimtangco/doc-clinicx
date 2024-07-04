@@ -18,7 +18,7 @@
 			<div class="overflow-x-auto">
 				<p class="text-text-desc text-sm">Available slots:</p>
 				<div class="">
-					<div class="flex gap-1 sm:gap-4 md:gap-8 lg:gap-14 mt-4">
+					<div class="grid grid-cols-4 md:grid-cols-7 gap-1 sm:gap-4 lg:gap-8 mt-4 w-full max-w-5xl">
 						@foreach ($appointments as $appointment)
 								<div>
 									<h5 class="text-center">

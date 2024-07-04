@@ -6,30 +6,7 @@
 	</x-slot>
 
 	<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-		<div class="flex items-center justify-between w-full">
-			<a class="hidden items-center gap-2 bg-primary text-white-text py-1 px-3 rounded-md"
-				href="{{ route('patients.create') }}">
-				<?xml version="1.0" ?><svg height="20" viewBox="0 0 32 32" width="20" xmlns="http://www.w3.org/2000/svg">
-					<defs>
-						<style>
-							.cls-1 {
-								fill: none;
-								stroke: #fff;
-								stroke-linecap: round;
-								stroke-linejoin: round;
-								stroke-width: 3px;
-							}
-						</style>
-					</defs>
-					<title />
-					<g id="plus">
-						<line class="cls-1" x1="16" x2="16" y1="7" y2="25" />
-						<line class="cls-1" x1="7" x2="25" y1="16" y2="16" />
-					</g>
-				</svg> {{ __('Add') }}
-			</a>
-			<div></div>
-		</div>
+
 		<div class="md:flex items-center gap-4 mt-8 space-y-4 md:space-y-0 px-2 md:px-0">
 			<div class="flex flex-col gap-2 w-full max-w-md">
 				<label for="status">Filter By Status</label>
@@ -40,42 +17,43 @@
 				</select>
 			</div>
 		</div>
-		<table class="w-full text-sm text-left rtl:text-right text-secondary-text mt-4 mb-8">
-			<thead class="text-xs text-primary-text uppercase bg-gray-50 border-b font-semibold">
-				<tr>
-					<th class="px-6 py-3" scope="col">
-						Patient Name
-					</th>
-					<th class="px-6 py-3" scope="col">
-						Procedure
-					</th>
-					<th class="px-6 py-3" scope="col">
-						Date
-					</th>
-					<th class="px-6 py-3" scope="col">
-						Time
-					</th>
-					<th class="px-6 py-3" scope="col">
-						Status
-					</th>
-					<th class="px-6 py-3" scope="col">
-						Action
-					</th>
-				</tr>
-			</thead>
+		<div class="relative overflow-x-auto">
+			<table class="p-2 w-full text-sm text-left rtl:text-right text-secondary-text mt-4 mb-8">
+				<thead class="text-xs text-primary-text uppercase bg-gray-50 border-b font-semibold">
+					<tr>
+						<th class="px-6 py-3" scope="col">
+							Patient Name
+						</th>
+						<th class="px-6 py-3 " scope="col">
+							Procedure
+						</th>
+						<th class="px-6 py-3 " scope="col">
+							Date
+						</th>
+						<th class="px-6 py-3 " scope="col">
+							Time
+						</th>
+						<th class="px-6 py-3" scope="col">
+							Status
+						</th>
+						<th class="px-6 py-3" scope="col">
+							Action
+						</th>
+					</tr>
+				</thead>
 				<tbody class="all-appointments">
 					@foreach ($appointments as $appointment)
 						<tr class="odd:bg-white even:bg-gray-100 border-b font-medium">
 							<th class="px-6 py-3 font-semibold text-gray-900 whitespace-nowrap" scope="row">
 								{{ $appointment->user->full_name }}
 							</th>
-							<td class="px-6 py-3">
+							<td class="px-6 py-3 ">
 								{{ $appointment->service->name }}
 							</td>
-							<td class="px-6 py-3">
+							<td class="px-6 py-3 ">
 								{{ $appointment->formatted_date }}
 							</td>
-							<td class="px-6 py-3">
+							<td class="px-6 py-3 ">
 								{{ $appointment->formatted_time }}
 							</td>
 							<td class="px-6 py-3 font-semibold">
@@ -90,22 +68,23 @@
 							<td class="px-6 py-3 flex flex-col gap-1 xl:block xl:space-x-1">
 								<a
 									class="font-medium text-white bg-blue-600 px-2 py-1 rounded hover:bg-blue-700 flex items-center justify-center gap-1 w-fit text-sm"
-									href="{{ route('edit-appointment', $appointment) }}">
+									href="{{ route('admin.edit-appointment', $appointment) }}">
 									<svg fill="none" height="15" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
 										stroke="currentColor" viewBox="0 0 24 24" width="15" xmlns="http://www.w3.org/2000/svg">
 										<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
 										<path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
 									</svg>
-									<span>View</span>
+									<span class="">View</span>
 								</a>
 							</td>
 						</tr>
 					@endforeach
 				</tbody>
 
-			<div class="error-container"></div>
+				<div class="error-container"></div>
 
-		</table>
+			</table>
+		</div>
 		<div class="mt-4">
 			{{ $appointments->links('pagination::tailwind') }}
 		</div>

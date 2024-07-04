@@ -53,7 +53,8 @@ class ProviderController extends Controller
     {
         $validated = $request->validated();
 
-        $barangay = Barangay::where('brgy_code', $validated->barangay)->value('brgy_name');
+        $barangay = Barangay::where('brgy_code', $validated['barangay'])->value('brgy_name');
+
         $city = City::where('city_code', $validated->city)->value('city_name');
         $province = Province::where(
             'province_code',

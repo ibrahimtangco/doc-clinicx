@@ -3,6 +3,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Spatie\Activitylog\Models\Activity;
+use App\Http\Controllers\PrintController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -14,12 +15,12 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\BusinessHourController;
 use App\Http\Controllers\PrescriptionController;
+use App\Http\Controllers\RedirectBackController;
 use App\Http\Controllers\MedicalHistoryController;
 use App\Http\Controllers\Feedback\FeedbackController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\SuperAdmin\SuperAdminController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\PrintController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,7 +40,6 @@ Route::get('/test_log', function () {
 });
 // Home Route
 Route::get('/', function () {
-
     return view('welcome');
 });
 
@@ -69,8 +69,8 @@ Route::middleware('auth')->group(function () {
     Route::post('api/fetch-city', [RegisteredUserController::class, 'fetchCity']);
     Route::post('api/fetch-barangay', [RegisteredUserController::class, 'fetchBarangay']);
 
-    Route::get('/get-cities/{provinceCode}', [ProfileController::class, 'getCities'])->name('profile.getCities');
-    Route::get('/get-barangays/{cityCode}', [ProfileController::class, 'getBarangays'])->name('profile.getBarangays');
+    Route::post('/get-cities/{provinceCode}', [ProfileController::class, 'getCities'])->name('profile.getCities');
+    Route::post('/get-barangays/{cityCode}', [ProfileController::class, 'getBarangays'])->name('profile.getBarangays');
 
     Route::get('/appointments/filter', [AppointmentController::class, 'filterByStatus']);
     Route::get('/appointments/filter/date', [AppointmentController::class, 'filterByDate']);
@@ -99,7 +99,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     Route::get('admin/appointments', [AppointmentController::class, 'displayAppointments'])->name('admin.appointments.view');
     Route::get('admin/appointments/history', [AppointmentController::class, 'showAppointmentHistory'])->name('admin.appointments.history');
-    Route::get('admin/edit-appointment/{appointment}', [AppointmentController::class, 'edit'])->name('edit-appointment');
+    Route::get('admin/edit-appointment/{appointment}', [AppointmentController::class, 'edit'])->name('admin.edit-appointment');
     Route::post('admin/edit-appointment/{appointment}', [AppointmentController::class, 'update']);
 
     Route::post('admin/api/fetch-city', [RegisteredUserController::class, 'fetchCity']);
@@ -137,17 +137,12 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     })->name('admin.inventory');
 });
 
-Route::middleware(['auth', 'role:user'])->group(function () {
-    Route::get('feedback', [FeedbackController::class, 'create'])->name('send.feedback');
-    Route::post('feedback', [FeedbackController::class, 'store']);
-});
-
 Route::middleware(['auth', 'role:SuperAdmin'])->group(function () {
     // Route::get('superadmin', [SuperAdminController::class, 'index'])->name('super_admin.dashboard');
     Route::get('superadmin/', [AppointmentController::class, 'displayAppointments'])->name('superadmin.appointments.view');
     Route::get('superadmin/profile', [ProfileController::class, 'edit'])->name('superadmin.profile.edit');
     Route::get('superadmin/appointments/history', [AppointmentController::class, 'showAppointmentHistory'])->name('superadmin.appointments.history');
-    Route::get('superadmin/edit-appointment/{appointment}', [AppointmentController::class, 'edit'])->name('edit-appointment');
+    Route::get('superadmin/edit-appointment/{appointment}', [AppointmentController::class, 'edit'])->name('superadmin.edit-appointment');
     Route::post('superadmin/edit-appointment/{appointment}', [AppointmentController::class, 'update']);
     Route::get('superadmin/prescriptions/{patient}/create', [PrescriptionController::class, 'create'])->name('create.prescription');
     Route::resource('superadmin/prescriptions', PrescriptionController::class)->names('superadmin.prescriptions');

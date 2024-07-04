@@ -6,7 +6,7 @@
     </x-slot>
 
     {{-- main container --}}
-    <div class="py-6">
+    <div class="py-6 px-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="flex items-center justify-between w-full py-2">
                 <a class="flex items-center gap-2 bg-primary text-white-text py-1 px-3 rounded-md"
@@ -21,19 +21,13 @@
                 <x-search id="searchCategory" value="Categories" />
             </div>
 
-            @if (session('success'))
-                <x-alert_success message="{{ session('success') }}" />
-            @elseif (session('error'))
-                <x-alert_error message="{{ session('error') }}" />
-            @endif
-
             @if ($categories->count() > 0)
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                    <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                    <table class="p-2 w-full text-sm text-left rtl:text-right text-gray-500">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>
                                 <th class="px-6 py-3" scope="col">Name</th>
-                                <th class="px-6 py-3" scope="col">Description</th>
+                                <th class="px-6 py-3 hidden md:block" scope="col">Description</th>
                                 <th class="px-6 py-3" scope="col">Status</th>
                                 <th class="px-6 py-3" scope="col"><span>Action</span></th>
                             </tr>
@@ -42,7 +36,7 @@
                             @foreach ($categories as $category)
                                 <tr class="bg-white border-b hover:bg-gray-50">
                                     <td class="px-6 py-4">{{ $category->name }}</td>
-                                    <td class="px-6 py-4">{{ $category->description }}</td>
+                                    <td class="px-6 py-4 hidden md:block">{{ $category->description }}</td>
                                     <td class="px-6 py-4">
                                         @if ($category->formatted_availability == 'Active')
                                             <span class="text-green-500">{{ $category->formatted_availability }}</span>
@@ -51,7 +45,7 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 text-right space-x-2 flex items-center">
-                                        <a class="font-medium text-white bg-blue-600 px-2 py-1 rounded hover:bg-blue-700 flex items-center justify-center gap-1 w-fit"
+                                        <a class=" block font-medium text-white bg-blue-600 px-2 py-1 rounded hover:bg-blue-700 flex items-center justify-center gap-1 w-fit"
                                             href="{{ route('categories.edit', ['category' => $category->id]) }}">
                                             <svg fill="none" height="15" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24" width="15" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -59,10 +53,10 @@
                                             </svg>
                                             <span class="hidden md:block">Edit</span>
                                         </a>
-                                        <form action="{{ route('categories.destroy', ['category' => $category->id]) }}" method="post">
+                                        <form class="inline-block" action="{{ route('categories.destroy', ['category' => $category->id]) }}" method="post">
                                             @csrf
                                             @method('DELETE')
-                                            <button class="font-medium text-white bg-red-600 px-2 py-1 rounded hover:bg-red-700 flex items-center justify-center gap-1 w-fit" type="submit">
+                                            <button class="delete-btn font-medium text-white bg-red-600 px-2 py-1 rounded hover:bg-red-700 flex items-center justify-center gap-1 w-fit" type="submit">
                                                 <svg fill="none" height="15" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24" width="15" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M3 6h18"></path>
                                                     <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -78,16 +72,18 @@
                     </table>
                 </div>
             @else
-                <div class="text-center text-xl text-text-desc">No Providers Found</div>
+                <div class="text-center text-xl text-text-desc">No Category Found</div>
             @endif
         </div>
     </div>
-
+<x-delete-modal/>
+<script src="{{ asset('js/delete-modal.js') }}"></script>
     <script>
+
         // search
         $('#searchCategory').on('keyup', function() {
-            $searchValue = $(this).val();
-            if ($searchValue !== '') {
+            const searchValue = $(this).val();
+            if (searchValue !== '') {
                 $('#searchData').show();
                 $('#allData').hide();
             } else {
@@ -99,7 +95,7 @@
                 type: 'get',
                 url: '{{ URL::to('admin/category/search') }}',
                 data: {
-                    'search': $searchValue
+                    'search': searchValue
                 },
                 success: function(data) {
                     $('#searchData').html(data);

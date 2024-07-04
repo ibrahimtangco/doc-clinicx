@@ -8,13 +8,6 @@
 	<div class="py-12">
 		<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
-				@if (session('message'))
-					<x-alert type="message" message="{{ session('message') }}" />
-                @elseif (session('error'))
-					<x-alert type="error" message="{{ session('message') }}" />
-
-				@endif
-
 			<table class="w-full text-sm text-left rtl:text-right text-secondary-text mb-8">
 				<thead class="text-xs text-primary-text uppercase bg-gray-50 border-b font-semibold">
 					<tr>
@@ -38,9 +31,9 @@
 						</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody >
 					@foreach ($appointments as $appointment)
-						<tr class="odd:bg-white even:bg-gray-100 border-b font-medium">
+						<tr class="odd:bg-white even:bg-gray-100 border-b font-medium ">
 							<th class="px-6 py-3 font-semibold text-gray-900 whitespace-nowrap" scope="row">
 								{{ $appointment->user->first_name }}
 								@if ($appointment->user->middle_name)
@@ -75,19 +68,19 @@
 								@endif
 							</td>
 							<td class="px-6 py-3 flex flex-col gap-1 xl:block xl:space-x-1">
-                                <a href="{{ route('show-appointment', $appointment) }}" class="px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white" type="submit">View</a>
+                                <a href="{{ route('show-appointment', $appointment) }}" class="font-medium text-white bg-blue-600 px-2 py-1 rounded hover:bg-blue-700" type="submit">View</a>
 
 								@if ($appointment->status != 'cancelled')
 									@if ($appointment->canBeCancelled())
 										<form action="{{ route('user.appointment.cancel', $appointment->id) }}" method="POST" class="inline" id="cancelForm">
 											@csrf
-											<button class="px-3 py-1 rounded-lg bg-red-500 hover:bg-red-600 text-white" type="submit">Cancel</button>
+											<button class="font-medium text-white bg-red-600 px-2 py-1 rounded hover:bg-red-700" type="submit">Cancel</button>
 										</form>
 									@else
-										<button class="px-3 py-1 rounded-lg bg-gray-300 text-white" disabled type="submit">Cancel</button>
+										<button class="font-medium text-white bg-gray-300 px-2 py-1 rounded" disabled type="submit">Cancel</button>
 									@endif
 								@else
-									<button class="px-3 py-1 rounded-lg bg-gray-300 text-white" disabled type="submit">Cancel</button>
+									<button class="font-medium text-white bg-gray-300 px-2 py-1 rounded" disabled type="submit">Cancel</button>
 								@endif
 
 							</td>

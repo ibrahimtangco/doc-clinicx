@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="p-6">
-        <div class="grid grid-cols-4 gap-4">
+        <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             <a href="{{ route('patients.index') }}">
                 <div class="hover:bg-primary/10 transition-colors bg-white p-6 shadow-sm rounded-lg col-span-1 flex flex-col gap-2">
                 <div class="bg-primary text-white rounded-full w-14 h-14 flex items-center justify-center ">
@@ -20,7 +20,7 @@
             <a href="{{ route('admin.appointments.view') }}">
                 <div class="hover:bg-purple-100 transition-colors bg-white p-6 shadow-sm rounded-lg col-span-1 flex flex-col gap-2">
                 <div class="bg-purple-800 text-white rounded-full w-14 h-14 flex items-center justify-center ">
-                   <?xml version="1.0" ?><svg id="Icons" fill="currentColor" height="27px" width="27px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path class="cls-1" d="M20,2H19V1a1,1,0,0,0-2,0V2H7V1A1,1,0,0,0,5,1V2H4A4,4,0,0,0,0,6V20a4,4,0,0,0,4,4H20a4,4,0,0,0,4-4V6A4,4,0,0,0,20,2Zm2,18a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V6A2,2,0,0,1,4,4H5V5A1,1,0,0,0,7,5V4H17V5a1,1,0,0,0,2,0V4h1a2,2,0,0,1,2,2Z"/><path class="cls-1" d="M19,7H5A1,1,0,0,0,5,9H19a1,1,0,0,0,0-2Z"/><path class="cls-1" d="M7,12H5a1,1,0,0,0,0,2H7a1,1,0,0,0,0-2Z"/><path class="cls-1" d="M7,17H5a1,1,0,0,0,0,2H7a1,1,0,0,0,0-2Z"/><path class="cls-1" d="M13,12H11a1,1,0,0,0,0,2h2a1,1,0,0,0,0-2Z"/><path class="cls-1" d="M13,17H11a1,1,0,0,0,0,2h2a1,1,0,0,0,0-2Z"/><path class="cls-1" d="M19,12H17a1,1,0,0,0,0,2h2a1,1,0,0,0,0-2Z"/><path class="cls-1" d="M19,17H17a1,1,0,0,0,0,2h2a1,1,0,0,0,0-2Z"/></svg>
+                   <?xml version="1.0" ?><svg height="26" fill="currentColor" viewBox="0 0 24 24" width="26" xmlns="http://www.w3.org/2000/svg"><path d="M11,14 L11,11 L13,11 L13,14 L16,14 L16,16 L13,16 L13,19 L11,19 L11,16 L8,16 L8,14 L11,14 Z M20,8 L20,5 L18,5 L18,6 L16,6 L16,5 L8,5 L8,6 L6,6 L6,5 L4,5 L4,8 L20,8 Z M20,10 L4,10 L4,20 L20,20 L20,10 Z M18,3 L20,3 C21.1045695,3 22,3.8954305 22,5 L22,20 C22,21.1045695 21.1045695,22 20,22 L4,22 C2.8954305,22 2,21.1045695 2,20 L2,5 C2,3.8954305 2.8954305,3 4,3 L6,3 L6,2 L8,2 L8,3 L16,3 L16,2 L18,2 L18,3 Z" fill-rule="evenodd"/></svg>
                 </div>
                 <p class="text-text-desc font-semibold">Total Appointments</p>
                 <p class="text-4xl font-bold">{{ $totalAppointments }}</p>

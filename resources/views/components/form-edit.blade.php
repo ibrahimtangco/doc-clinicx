@@ -16,7 +16,7 @@
 		</select>
 	</div>
 @endif
-	<div class="flex items-center gap-2">
+	<div class="w-full md:flex items-center gap-2 space-y-6 md:space-y-0">
 		<div>
 			<x-input-label :value="__('First Name')" for="first_name" />
 			<x-text-input :value="old('first_name', $user->user->first_name)" autocomplete="first_name" autofocus class="mt-1 block w-full" id="first_name"

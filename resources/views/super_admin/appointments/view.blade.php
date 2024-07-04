@@ -96,7 +96,7 @@
 						<td class="px-6 py-3 flex flex-col gap-1 xl:block xl:space-x-1">
 							<a
 								class="font-medium text-white bg-blue-600 px-2 py-1 rounded hover:bg-blue-700 flex items-center justify-center gap-1 w-fit"
-								href="{{ route('edit-appointment', $appointment->id) }}">
+								href="{{ route('superadmin.edit-appointment', $appointment->id) }}">
 								<?xml version="1.0" ?><svg height="15px" version="1.1" viewBox="0 0 18 18" width="15px"
 									xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" xmlns:xlink="http://www.w3.org/1999/xlink"
 									xmlns="http://www.w3.org/2000/svg">

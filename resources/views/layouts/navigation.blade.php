@@ -38,6 +38,9 @@
 							<x-dropdown-link :href="route('superadmin.profile.edit')">
 								{{ __('Profile') }}
 							</x-dropdown-link>
+                            <x-dropdown-link :href="route('superadmin.prescriptions.index')">
+								{{ __('View Prescriptions') }}
+							</x-dropdown-link>
 						@else
 							<x-dropdown-link :href="route('profile.edit')">
 								{{ __('Profile') }}
@@ -94,6 +97,9 @@
 				@if (auth()->user()->userType == 'SuperAdmin')
 					<x-responsive-nav-link :href="route('superadmin.profile.edit')">
 						{{ __('Profile') }}
+					</x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('superadmin.prescriptions.index')">
+						{{ __('View Prescriptions') }}
 					</x-responsive-nav-link>
 				@else
 					<x-responsive-nav-link :href="route('profile.edit')">

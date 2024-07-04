@@ -1,18 +1,21 @@
 <x-admin-layout>
 	<x-slot name="header">
-		<h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-			{{ __('Appoinments') }}
+		<h2 class="font-semibold text-xl text-gray-800 leading-tight">
+			{{ __('Business Hours') }}
 		</h2>
 	</x-slot>
 
 	<div class="container p-8">
-		<div>
+		<div class="relative overflow-x-auto">
 			<form action="{{ route('business_hours.update') }}" method="post">
 				@csrf
 				@foreach ($businessHours as $businessHour)
 					<div class="grid grid-cols-5 place-items-center space-y-4">
 						<div class="col-span-1 w-full">
-							<h4 class="text-lg">
+							<h4 class="text-lg md:hidden">
+								{{ Carbon\Carbon::parse($businessHour->day)->format('D') }}
+							</h4>
+                            <h4 class="text-lg hidden md:block">
 								{{ $businessHour->day }}
 							</h4>
 						</div>
